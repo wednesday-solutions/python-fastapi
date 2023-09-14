@@ -109,3 +109,5 @@ itsdangerous
 pdf2image
 ftfy
 alembic
+email-validator
+werkzeug
