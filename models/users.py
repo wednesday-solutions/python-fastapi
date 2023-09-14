@@ -1,27 +1,3 @@
-# from sqlalchemy import Column
-# from sqlalchemy.sql import func
-# from sqlalchemy.sql.sqltypes import DateTime
-# from sqlalchemy.sql.sqltypes import Integer
-# from sqlalchemy.sql.sqltypes import String
-
-# from config.db import Base
-# from config.db import engine
-
-# class User(Base):
-#     __tablename__ = "user"
-
-#     id = Column(Integer, primary_key=True, index=True)
-#     name = Column(String(50))
-#     email = Column(String(50))
-#     mobile = Column(String(50))
-#     password = Column(String(50))
-#     created_at = Column(DateTime, server_default=func.current_timestamp())
-#     updated_at = Column(DateTime)
-#     deleted_at = Column(DateTime)
-
-
-# Base.metadata.create_all(bind=engine)
-
 from sqlalchemy import Column
 from sqlalchemy.sql import func
 from sqlalchemy.sql.sqltypes import DateTime
