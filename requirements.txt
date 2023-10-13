@@ -33,7 +33,7 @@ humanfriendly==10.0
 idna==3.4
 iniconfig==2.0.0
 joblib==1.2.0
-langchain==0.0.184
+langchain
 lxml==4.9.2
 lz4==4.3.2
 Markdown==3.4.3
@@ -103,11 +103,9 @@ zstandard==0.21.0
 pytest_mock_resources
 python_on_whales
 pylint
-pytest
 pyjwt
 itsdangerous
 pdf2image
-ftfy
 alembic
 email-validator
 werkzeug

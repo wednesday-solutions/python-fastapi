@@ -1,14 +1,12 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
-from sqlalchemy.exc import IntegrityError
-
-from constants.utils.utils import responseFormatter
-from constants.utils.utils import check_existing_field 
+from constants import jwt_utils
 from constants.messages.users import user_messages as messages
 from models.users import User
 from schemas.users import CreateUser
 from schemas.users import Login
 from werkzeug.security import check_password_hash
+from utils.user_utils import check_existing_field, responseFormatter
 
 
 def get_user(user_id: int, dbSession: Session):
@@ -84,8 +82,8 @@ def login(data: Login, dbSession: Session):
             raise Exception(messages["INVALID_CREDENTIALS"])
         
         del user_details.password
-
-        return responseFormatter(messages["LOGIN_SUCCESSFULLY"], user_details)
+        token = jwt_utils.create_access_token({"sub": user_details.email})
+        return responseFormatter(messages["LOGIN_SUCCESSFULLY"], {"token": token})
 
     except Exception as e:
         print(e)
