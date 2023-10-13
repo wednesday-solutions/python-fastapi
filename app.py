@@ -16,9 +16,6 @@ app = FastAPI(
     openapi_tags=[{"name": "FastAPI Template", "description": "API template using FastAPI."}],
 )
 
-# Initializing application
-app = FastAPI()
-
 origins = ["*"]
 
 # CORS middleware
@@ -30,7 +27,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(user)
+app.include_router(user, prefix='/user')
 
 # Default API route
 @app.get("/")
@@ -44,7 +41,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
     return JSONResponse(
         status_code=400,
         content=jsonable_encoder(
-            {"message": "Validation error", "detail": exc.errors()}
+            {"message": "Validation error", "detail": exc.errors()[0]["msg"]}
         ),
     )
 
@@ -58,4 +55,6 @@ async def http_exception_handler(request: Request, exc: HTTPException):
 
 @app.get("/{path:path}")
 async def catch_all(path: str):
-    return {"success": False, "message": f"Route not found for path: {path}"}
+    return JSONResponse(
+        status_code=404, content={"success": False, "message": f"Route not found for path: {path}"}
+    )

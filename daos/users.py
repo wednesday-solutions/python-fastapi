@@ -1,7 +1,9 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 
 from constants.utils.utils import responseFormatter
+from constants.utils.utils import check_existing_field 
 from constants.messages.users import user_messages as messages
 from models.users import User
 from schemas.users import CreateUser
@@ -40,27 +42,14 @@ def get_user(user_id: int, dbSession: Session):
 def create_user(data: CreateUser, dbSession: Session):
     try:
         user_data = data.dict()
-        # Check if the course already exists in the db
-        existing_user_email = (
-            dbSession.query(User)
-            .where(
-                User.email == user_data["email"],
-            )
-            .first()
-        )
-
-        if existing_user_email:
+        # Check if the email already exists in the db
+        email_exists = check_existing_field(dbSession=dbSession, model=User, field='email', value=user_data["email"])
+        if email_exists:
             raise Exception(messages["EMAIL_ALREADY_EXIST"])
-        
-        existing_user_mobile = (
-            dbSession.query(User)
-            .where(
-                User.mobile == user_data["mobile"],
-            )
-            .first()
-        )
 
-        if existing_user_mobile:
+        # Check if the mobile already exists in the db
+        mobile_exists = check_existing_field(dbSession=dbSession, model=User, field='mobile', value=user_data["mobile"])        
+        if mobile_exists:
             raise Exception(messages["MOBILE_ALREADY_EXIST"])
 
         user = User(**user_data)

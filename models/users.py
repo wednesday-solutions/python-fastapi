@@ -16,9 +16,9 @@ class User(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(50))
-    email = Column(String(50))
-    mobile = Column(String(50))
-    password = Column(String(128))  # Store the password hash
+    email = Column(String(50), unique=True)
+    mobile = Column(String(50), unique=True)
+    password = Column(String(200))  # Store the password hash
     created_at = Column(DateTime, server_default=func.current_timestamp())
     updated_at = Column(DateTime)
     deleted_at = Column(DateTime)

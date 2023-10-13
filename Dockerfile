@@ -1,5 +1,5 @@
 # Use a base image with Python 3 already installed
-FROM python:3
+FROM python:3.9.13
 
 # Set the working directory
 WORKDIR /usr/src/app
