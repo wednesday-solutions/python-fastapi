@@ -24,11 +24,11 @@ flatbuffers==23.5.26
 frozenlist==1.3.3
 ftfy==6.1.1
 greenlet==2.0.2
-h11==0.9.0
+h11
 hnswlib==0.7.0
-httpcore==0.11.1
+httpcore
 httptools==0.5.0
-httpx==0.15.5
+httpx
 humanfriendly==10.0
 idna==3.4
 iniconfig==2.0.0
@@ -109,3 +109,5 @@ itsdangerous
 pdf2image
 ftfy
 alembic
+email-validator
+werkzeug

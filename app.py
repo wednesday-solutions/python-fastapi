@@ -5,6 +5,8 @@ from fastapi.exceptions import HTTPException
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from routes.users import user
+import config.db
 
 # Initializing the swagger docs
 app = FastAPI(
@@ -13,9 +15,6 @@ app = FastAPI(
     version="0.0.1",
     openapi_tags=[{"name": "FastAPI Template", "description": "API template using FastAPI."}],
 )
-
-# Initializing application
-app = FastAPI()
 
 origins = ["*"]
 
@@ -27,6 +26,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(user, prefix='/user')
 
 # Default API route
 @app.get("/")
@@ -40,7 +41,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
     return JSONResponse(
         status_code=400,
         content=jsonable_encoder(
-            {"message": "Validation error", "detail": exc.errors()}
+            {"message": "Validation error", "detail": exc.errors()[0]["msg"]}
         ),
     )
 
@@ -49,5 +50,11 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
     return JSONResponse(
-        status_code=exc.status_code, content={"success": False, "message": exc.detail, "isDone": "NO"}
+        status_code=exc.status_code, content={"success": False, "message": exc.detail }
+    )
+
+@app.get("/{path:path}")
+async def catch_all(path: str):
+    return JSONResponse(
+        status_code=404, content={"success": False, "message": f"Route not found for path: {path}"}
     )

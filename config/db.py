@@ -1,4 +1,3 @@
-import json
 import os
 import sys
 
@@ -13,11 +12,11 @@ from sqlalchemy.pool import StaticPool
 load_dotenv()
 
 # Set the default values for connecting locally
-HOST = os.environ.get("DB_HOSTNAME", "127.0.0.1")
-PORT = os.environ.get("DB_PORT", "3306")
-DBNAME = os.environ.get("DB_NAME", "upthink_ag_api")
-USERNAME = os.environ.get("DB_USERNAME", "root")
-PASSWORD = os.environ.get("DB_PASSWORD", "root")
+HOST = os.environ.get("DB_HOSTNAME")
+PORT = os.environ.get("DB_PORT")
+DBNAME = os.environ.get("DB_NAME")
+USERNAME = os.environ.get("DB_USERNAME")
+PASSWORD = os.environ.get("DB_PASSWORD")
 
 if "pytest" in sys.modules:
     SQLALCHEMY_DATABASE_URL = "sqlite://"
@@ -39,10 +38,6 @@ else:
 
 meta = MetaData()
 
-print("Python Executable:", sys.executable)
-print("Python Path:", sys.path)
-
-
 # Test the connection and print the status
 try:
     conn = engine.connect()
@@ -53,6 +48,7 @@ try:
     )
 except Exception as e:
     print(f"Failed to connect to database. Error: {e}")
+    raise Exception(f"Failed to connect to database. Error: {e}")
 
 localSession = Session(engine)
 
