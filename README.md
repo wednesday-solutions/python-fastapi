@@ -7,3 +7,13 @@
 ```
 ./scripts/local_server.sh
 ```
+
+## Create migrations
+```
+alembic revision -m 'initialize all models'
+```
+
+## Upgrade migrations
+```
+alembic upgrade head
+``` 
