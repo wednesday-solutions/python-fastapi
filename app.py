@@ -6,7 +6,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from routes.users import user
-
+from middlewares.rate_limiter_middleware import rate_limit_middleware
 
 
 # Initializing the swagger docs
@@ -28,7 +28,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
+app.middleware("http")(rate_limit_middleware)
 app.include_router(user, prefix='/user')
 
 # Default API route
