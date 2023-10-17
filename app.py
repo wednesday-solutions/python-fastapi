@@ -6,7 +6,8 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from routes.users import user
-import config.db
+
+
 
 # Initializing the swagger docs
 app = FastAPI(
@@ -15,6 +16,7 @@ app = FastAPI(
     version="0.0.1",
     openapi_tags=[{"name": "FastAPI Template", "description": "API template using FastAPI."}],
 )
+
 
 origins = ["*"]
 
