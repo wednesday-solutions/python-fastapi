@@ -1,43 +1,42 @@
-from fastapi import Request, HTTPException
-from datetime import datetime, timedelta
-from collections import defaultdict
-from typing import Callable
+from fastapi import FastAPI
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.requests import Request
 from fastapi.responses import JSONResponse
-
-_request_timestamps = defaultdict(list)
+import aioredis
+import datetime
+import os
 
 MAX_REQUESTS = 10
-TIME_WINDOW = 60
+TIME_WINDOW = 60  
 
-async def rate_limit_middleware(request: Request, call_next: Callable):
-    global _request_timestamps
+class RateLimitMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        client_ip = request.client.host
+        now = datetime.datetime.now()
 
-    client_ip = request.client.host
-    now = datetime.now()
+        # Updated for aioredis v2.x
+        redis_url = os.getenv("REDIS_URL", "redis://localhost:6379")
+        redis = aioredis.from_url(redis_url, encoding="utf-8", decode_responses=True)
 
-    if client_ip not in _request_timestamps:
-        _request_timestamps[client_ip] = []
+        try:
+            request_count = await redis.get(client_ip)
+            request_count = int(request_count) if request_count else 0
 
-    # Remove expired timestamps
-    _request_timestamps[client_ip] = [
-        timestamp for timestamp in _request_timestamps[client_ip]
-        if now - timestamp <= timedelta(seconds=TIME_WINDOW)
-    ]
+            if request_count >= MAX_REQUESTS:
+                ttl = await redis.ttl(client_ip)
+                detail = {
+                    "error": "Too Many Requests",
+                    "message": f"Rate limit exceeded. Try again in {ttl} seconds."
+                }
+                return JSONResponse(status_code=429, content=detail)
+            
+            pipe = redis.pipeline()
+            pipe.incr(client_ip)
+            pipe.expire(client_ip, TIME_WINDOW)
+            await pipe.execute()
+        finally:
+            pass
 
-    # Check the number of requests
-    if len(_request_timestamps[client_ip]) >= MAX_REQUESTS:
-        # Provide a more informative HTTP 429 response
-        detail = {
-            "error": "Too Many Requests",
-            "message": f"You have exceeded the maximum number of requests ({MAX_REQUESTS}) in the time window ({TIME_WINDOW}s)."
-        }
-        return JSONResponse(
-            status_code=429,
-            content=detail,
-        )
+        response = await call_next(request)
+        return response
 
-    # Log the current request
-    _request_timestamps[client_ip].append(now)
-
-    response = await call_next(request)
-    return response

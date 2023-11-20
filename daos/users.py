@@ -1,3 +1,5 @@
+import json
+from aioredis import Redis
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from constants import jwt_utils
@@ -6,11 +8,17 @@ from models.users import User
 from schemas.users import CreateUser
 from schemas.users import Login
 from werkzeug.security import check_password_hash
+from utils import redis_utils
 from utils.user_utils import check_existing_field, responseFormatter
 
 
 def get_user(user_id: int, dbSession: Session):
     try:
+        cache_key = f"user:{user_id}"
+        cached_user = redis_utils.get_redis().get(cache_key)
+
+        if cached_user:
+            return json.loads(cached_user)
         # Check if the subject already exists in the database
         user = (
             dbSession.query(User)
@@ -26,7 +34,8 @@ def get_user(user_id: int, dbSession: Session):
             )
             .first()
         )
-
+        if user:
+            Redis.set(cache_key, json.dumps(user))
         if not user:
             raise Exception(messages["NO_USER_FOUND_FOR_ID"])
 

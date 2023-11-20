@@ -17,3 +17,9 @@ alembic revision -m 'initialize all models'
 ```
 alembic upgrade head
 ``` 
+
+## Redis Dependency
+```
+docker run --name recorder-redis -p 6379:6379 -d redis:alpine
+```
+or add the REDIS_URL in .env file

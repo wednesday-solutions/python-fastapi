@@ -7,6 +7,7 @@ from daos.users import get_user as get_user_dao
 from daos.users import login as signin
 from schemas.users import CreateUser
 from schemas.users import Login
+from utils.redis_utils import get_redis
 from utils.user_utils import get_current_user
 
 user = APIRouter()
@@ -22,10 +23,10 @@ def login(payload: Login, db: Session = Depends(create_local_session)):
     return response
 
 @user.get("/{user_id}", tags=["Users"])
-def profile(user_id, db: Session = Depends(create_local_session)):
-    response = get_user_dao(user_id, dbSession=db)
+async def profile(user_id, db: Session = Depends(create_local_session), redis=Depends(get_redis)):
+    # Here, you can use 'redis' to fetch or store data in Redis cache
+    response = await get_user_dao(user_id, dbSession=db, redis=redis)
     return response
-
 
 @user.get("/secure-route/", tags=["Users"], dependencies=[Depends(get_current_user)])
 def secure_route():
