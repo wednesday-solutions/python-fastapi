@@ -110,3 +110,6 @@ alembic
 email-validator
 werkzeug
 aioredis
+flake8
+black
+pre-commit

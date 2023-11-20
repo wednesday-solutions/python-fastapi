@@ -50,12 +50,12 @@ def create_user(data: CreateUser, dbSession: Session):
     try:
         user_data = data.dict()
         # Check if the email already exists in the db
-        email_exists = check_existing_field(dbSession=dbSession, model=User, field='email', value=user_data["email"])
+        email_exists = check_existing_field(dbSession=dbSession, model=User, field="email", value=user_data["email"])
         if email_exists:
             raise Exception(messages["EMAIL_ALREADY_EXIST"])
 
         # Check if the mobile already exists in the db
-        mobile_exists = check_existing_field(dbSession=dbSession, model=User, field='mobile', value=user_data["mobile"])        
+        mobile_exists = check_existing_field(dbSession=dbSession, model=User, field="mobile", value=user_data["mobile"])
         if mobile_exists:
             raise Exception(messages["MOBILE_ALREADY_EXIST"])
 
@@ -70,6 +70,7 @@ def create_user(data: CreateUser, dbSession: Session):
     except Exception as e:
         # Return a user-friendly error message to the client
         raise HTTPException(status_code=400, detail=f"{str(e)}")
+
 
 def login(data: Login, dbSession: Session):
     try:
@@ -86,10 +87,10 @@ def login(data: Login, dbSession: Session):
 
         if not user_details:
             raise Exception(messages["INVALID_CREDENTIALS"])
-        
+
         if not check_password_hash(user_details.password, user_data["password"]):
             raise Exception(messages["INVALID_CREDENTIALS"])
-        
+
         del user_details.password
         token = jwt_utils.create_access_token({"sub": user_details.email})
         return responseFormatter(messages["LOGIN_SUCCESSFULLY"], {"token": token})

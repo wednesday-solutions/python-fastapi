@@ -14,7 +14,7 @@ from models import users  # noqa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '45f7c66353f4'
+revision: str = "45f7c66353f4"
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None

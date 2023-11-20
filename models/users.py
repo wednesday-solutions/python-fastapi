@@ -11,6 +11,7 @@ from config.db import engine
 
 Base = declarative_base()
 
+
 class User(Base):
     __tablename__ = "user"
 
@@ -23,11 +24,13 @@ class User(Base):
     updated_at = Column(DateTime)
     deleted_at = Column(DateTime)
 
+
 # Define an event listener to hash the password before inserting a new user
 @event.listens_for(User, "before_insert")
 def hash_password_before_insert(mapper, connection, target):
-    print('IN EVENT LISTENER')
+    print("IN EVENT LISTENER")
     if target.password:
         target.password = generate_password_hash(target.password)
+
 
 Base.metadata.create_all(bind=engine)

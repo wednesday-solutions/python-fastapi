@@ -29,7 +29,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.add_middleware(RateLimitMiddleware)
-app.include_router(user, prefix='/user')
+app.include_router(user, prefix="/user")
+
 
 # Default API route
 @app.get("/")
@@ -42,21 +43,16 @@ async def read_main():
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
     return JSONResponse(
         status_code=400,
-        content=jsonable_encoder(
-            {"message": "Validation error", "detail": exc.errors()[0]["msg"]}
-        ),
+        content=jsonable_encoder({"message": "Validation error", "detail": exc.errors()[0]["msg"]}),
     )
 
 
 # pylint: disable=unused-argument
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
-    return JSONResponse(
-        status_code=exc.status_code, content={"success": False, "message": exc.detail }
-    )
+    return JSONResponse(status_code=exc.status_code, content={"success": False, "message": exc.detail})
+
 
 @app.get("/{path:path}")
 async def catch_all(path: str):
-    return JSONResponse(
-        status_code=404, content={"success": False, "message": f"Route not found for path: {path}"}
-    )
+    return JSONResponse(status_code=404, content={"success": False, "message": f"Route not found for path: {path}"})
