@@ -8,6 +8,8 @@ from fastapi.responses import JSONResponse
 from routes.users import user
 import config.db
 from fastapi_pagination import add_pagination
+from middlewares.rate_limiter_middleware import rate_limit_middleware
+
 
 # Initializing the swagger docs
 app = FastAPI(
@@ -16,6 +18,7 @@ app = FastAPI(
     version="0.0.1",
     openapi_tags=[{"name": "FastAPI Template", "description": "API template using FastAPI."}],
 )
+
 
 origins = ["*"]
 
@@ -27,7 +30,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
+app.middleware("http")(rate_limit_middleware)
 app.include_router(user, prefix='/user')
 
 # Default API route

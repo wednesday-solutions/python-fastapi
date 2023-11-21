@@ -11,8 +11,13 @@ from models.users import User
 from schemas.users import CreateUser
 from schemas.users import UserOutResponse
 from schemas.users import Login
+from utils.user_utils import get_current_user
+from typing import Annotated
+from fastapi.security import HTTPBearer
 
 user = APIRouter()
+
+httpBearerScheme = HTTPBearer()
 
 @user.post("/register", tags=["Users"])
 def register(payload: CreateUser, db: Session = Depends(create_local_session)):
@@ -24,8 +29,8 @@ def login(payload: Login, db: Session = Depends(create_local_session)):
     response = signin(data=payload, dbSession=db)
     return response
 
-@user.get("/{user_id}", tags=["Users"])
-def profile(user_id, db: Session = Depends(create_local_session)):
+@user.get("/{user_id}", tags=["Users"], dependencies=[Depends(get_current_user)])
+def profile(token: Annotated[str, Depends(httpBearerScheme)], user_id: int, db: Session = Depends(create_local_session)):
     response = get_user_dao(user_id, dbSession=db)
     return response
 
@@ -33,3 +38,7 @@ def profile(user_id, db: Session = Depends(create_local_session)):
 def list_users(db: Session = Depends(create_local_session)):
     response = list_users_dao(dbSession=db)
     return response
+
+@user.get("/{user_id}/secure-route/", tags=["Users"], dependencies=[Depends(get_current_user)])
+def secure_route(token: Annotated[str, Depends(httpBearerScheme)], user_id: int):
+    return {"message": "If you see this, you're authenticated"}
