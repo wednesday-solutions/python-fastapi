@@ -1,3 +1,4 @@
+import json
 import os
 import sys
 
@@ -28,8 +29,21 @@ if "pytest" in sys.modules:
         poolclass=StaticPool,
     )
 
+elif "PYTHON_FASTAPI_TEMPLATE_CLUSTER_SECRET" in os.environ:
+    print("Connecting to database on RDS..\n")
+    dbSecretJSON = os.environ["PYTHON_FASTAPI_TEMPLATE_CLUSTER_SECRET"]
+    dbSecretParsed = json.loads(dbSecretJSON)
+
+    HOST = dbSecretParsed["host"]
+    PORT = dbSecretParsed["port"]
+    DBNAME = dbSecretParsed["dbname"]
+    USERNAME = dbSecretParsed["username"]
+    PASSWORD = dbSecretParsed["password"]
+
+    engine = create_engine(f"mysql+pymysql://{USERNAME}:{PASSWORD}@{HOST}/{DBNAME}")
+
 else:
-    print("Connecting local server..\n")
+    print("Connecting local database..\n")
     HOST = os.environ["DB_HOSTNAME"]
     PORT = os.environ["DB_PORT"]
     DBNAME = os.environ["DB_NAME"]
