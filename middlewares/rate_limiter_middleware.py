@@ -7,7 +7,8 @@ import datetime
 import os
 
 MAX_REQUESTS = 10
-TIME_WINDOW = 60  
+TIME_WINDOW = 60
+
 
 class RateLimitMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
@@ -24,12 +25,9 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
 
             if request_count >= MAX_REQUESTS:
                 ttl = await redis.ttl(client_ip)
-                detail = {
-                    "error": "Too Many Requests",
-                    "message": f"Rate limit exceeded. Try again in {ttl} seconds."
-                }
+                detail = {"error": "Too Many Requests", "message": f"Rate limit exceeded. Try again in {ttl} seconds."}
                 return JSONResponse(status_code=429, content=detail)
-            
+
             pipe = redis.pipeline()
             pipe.incr(client_ip)
             pipe.expire(client_ip, TIME_WINDOW)
@@ -39,4 +37,3 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
 
         response = await call_next(request)
         return response
-

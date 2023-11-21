@@ -58,9 +58,7 @@ try:
     conn = engine.connect()
     print("-------------------------- Database connected ----------------------------")
     print(f"{{ \n\tdb_uri: mysql:{USERNAME}@{HOST}/{DBNAME} \n }}")
-    print(
-        "\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-    )
+    print("\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
 except Exception as e:
     print(f"Failed to connect to database. Error: {e}")
     raise Exception(f"Failed to connect to database. Error: {e}")
@@ -70,9 +68,7 @@ localSession = Session(engine)
 
 def create_local_session() -> Session:
     """Factory function that returns a new session object"""
-    engine = create_engine(
-        f"mysql+pymysql://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DBNAME}"
-    )
+    engine = create_engine(f"mysql+pymysql://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DBNAME}")
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
     db = SessionLocal()
     try:
