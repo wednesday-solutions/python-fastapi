@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from routes.users import user
 import config.db
+from fastapi_pagination import add_pagination
 
 # Initializing the swagger docs
 app = FastAPI(
@@ -58,3 +59,5 @@ async def catch_all(path: str):
     return JSONResponse(
         status_code=404, content={"success": False, "message": f"Route not found for path: {path}"}
     )
+
+add_pagination(app)

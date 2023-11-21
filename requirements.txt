@@ -111,3 +111,4 @@ ftfy
 alembic
 email-validator
 werkzeug
+fastapi-pagination
