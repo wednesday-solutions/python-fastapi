@@ -7,7 +7,10 @@ from constants.messages.users import user_messages as messages
 from models.users import User
 from schemas.users import CreateUser
 from schemas.users import Login
+from schemas.users import UserOutResponse
 from werkzeug.security import check_password_hash
+from fastapi_pagination.ext.sqlalchemy import paginate
+from sqlalchemy import select
 from utils import redis_utils
 from utils.user_utils import check_existing_field, responseFormatter
 
@@ -42,6 +45,29 @@ def get_user(user_id: int, dbSession: Session):
         return responseFormatter(messages["USER_DETAILS"], user._asdict())
 
     except Exception as e:
+        # Return a user-friendly error message to the client
+        raise HTTPException(status_code=400, detail=f"{str(e)}")
+
+
+def list_users(dbSession: Session):
+    try:
+        query = (
+            select(
+                User.id,
+                User.name,
+                User.email,
+                User.mobile
+            )
+            .order_by(User.created_at)
+        )
+        
+        # Pass the Select object to the paginate function
+        users = paginate(dbSession, query=query)
+
+        return users
+
+    except Exception as e:
+        print(e)
         # Return a user-friendly error message to the client
         raise HTTPException(status_code=400, detail=f"{str(e)}")
 
@@ -92,7 +118,7 @@ def login(data: Login, dbSession: Session):
             raise Exception(messages["INVALID_CREDENTIALS"])
 
         del user_details.password
-        token = jwt_utils.create_access_token({"sub": user_details.email})
+        token = jwt_utils.create_access_token({"sub": user_details.email, "id": user_details.id})
         return responseFormatter(messages["LOGIN_SUCCESSFULLY"], {"token": token})
 
     except Exception as e:

@@ -23,7 +23,12 @@ async def get_current_user(request: Request):
         raise HTTPException(status_code=401, detail="Token not provided")
 
     try:
+        user_id = int(dict(request).get('path_params')['user_id'])
+        token = token.split(' ')[1]
         payload = jwt_utils.decode_access_token(token)
-        return payload
-    except HTTPException:
-        raise HTTPException(status_code=401, detail="Invalid Token or Expired")
+        if user_id == int(payload['id']):
+            return payload
+        else:
+            raise HTTPException(status_code=401, detail="Unauthorized")    
+    except HTTPException as e:
+        raise HTTPException(status_code=401, detail=e.detail)

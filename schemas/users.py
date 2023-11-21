@@ -3,9 +3,9 @@ import re
 from constants.messages.users import user_messages as messages
 from fastapi import HTTPException
 from pydantic import BaseModel
-from pydantic import EmailStr
 from pydantic import validator
-from email_validator import validate_email, EmailNotValidError
+from email_validator import validate_email
+from pydantic import Field
 
 
 class CreateUser(BaseModel):
@@ -72,3 +72,11 @@ class Login(BaseModel):
         ):
             raise HTTPException(status_code=400, detail=f"{str(messages['INVALID_CREDENTIALS'])}")
         return password
+
+class UserOutResponse(BaseModel):
+    id: int = Field(alias='id')
+    name: str
+    email: str
+    mobile: str
+    class Config:
+        orm_mode = True
