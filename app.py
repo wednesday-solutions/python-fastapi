@@ -9,6 +9,7 @@ from routes.users import user
 import config.db
 from fastapi_pagination import add_pagination
 from middlewares.rate_limiter_middleware import rate_limit_middleware
+from middlewares.rate_limiter_middleware import RateLimitMiddleware
 
 
 # Initializing the swagger docs
@@ -30,8 +31,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-app.middleware("http")(rate_limit_middleware)
-app.include_router(user, prefix='/user')
+app.add_middleware(RateLimitMiddleware)
+app.include_router(user, prefix="/user")
+
 
 # Default API route
 @app.get("/")
@@ -44,18 +46,15 @@ async def read_main():
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
     return JSONResponse(
         status_code=400,
-        content=jsonable_encoder(
-            {"message": "Validation error", "detail": exc.errors()[0]["msg"]}
-        ),
+        content=jsonable_encoder({"message": "Validation error", "detail": exc.errors()[0]["msg"]}),
     )
 
 
 # pylint: disable=unused-argument
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
-    return JSONResponse(
-        status_code=exc.status_code, content={"success": False, "message": exc.detail }
-    )
+    return JSONResponse(status_code=exc.status_code, content={"success": False, "message": exc.detail})
+
 
 @app.get("/{path:path}")
 async def catch_all(path: str):

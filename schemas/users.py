@@ -7,6 +7,7 @@ from pydantic import validator
 from email_validator import validate_email
 from pydantic import Field
 
+
 class CreateUser(BaseModel):
     name: str
     email: str
@@ -38,12 +39,15 @@ class CreateUser(BaseModel):
             or not any(char.isupper() for char in password)
             or not any(char.islower() for char in password)
             or not any(char.isdigit() for char in password)
-            or not re.search(r'[!@#$%^&*(),.?":{}|<>]', password) # The regular expression [!@#$%^&*(),.?":{}|<>] matches any of these special characters.
+            or not re.search(
+                r'[!@#$%^&*(),.?":{}|<>]', password
+            )  # The regular expression [!@#$%^&*(),.?":{}|<>] matches any of these special characters.
         ):
             raise ValueError(
                 "Password must be strong: at least 8 characters, containing at least one uppercase letter, one lowercase letter, one digit, and one special character."
             )
         return password
+
 
 class Login(BaseModel):
     email: str
@@ -62,7 +66,9 @@ class Login(BaseModel):
             or not any(char.isupper() for char in password)
             or not any(char.islower() for char in password)
             or not any(char.isdigit() for char in password)
-            or not re.search(r'[!@#$%^&*(),.?":{}|<>]', password) # The regular expression [!@#$%^&*(),.?":{}|<>] matches any of these special characters.
+            or not re.search(
+                r'[!@#$%^&*(),.?":{}|<>]', password
+            )  # The regular expression [!@#$%^&*(),.?":{}|<>] matches any of these special characters.
         ):
             raise HTTPException(status_code=400, detail=f"{str(messages['INVALID_CREDENTIALS'])}")
         return password

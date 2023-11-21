@@ -11,6 +11,7 @@ from models.users import User
 from schemas.users import CreateUser
 from schemas.users import UserOutResponse
 from schemas.users import Login
+from utils.redis_utils import get_redis
 from utils.user_utils import get_current_user
 from typing import Annotated
 from fastapi.security import HTTPBearer
@@ -24,14 +25,17 @@ def register(payload: CreateUser, db: Session = Depends(create_local_session)):
     response = create_user_dao(data=payload, dbSession=db)
     return response
 
+
 @user.post("/signin", tags=["Users"])
 def login(payload: Login, db: Session = Depends(create_local_session)):
     response = signin(data=payload, dbSession=db)
     return response
 
+
 @user.get("/{user_id}", tags=["Users"], dependencies=[Depends(get_current_user)])
-def profile(token: Annotated[str, Depends(httpBearerScheme)], user_id: int, db: Session = Depends(create_local_session)):
-    response = get_user_dao(user_id, dbSession=db)
+async def profile(token: Annotated[str, Depends(httpBearerScheme)], user_id, db: Session = Depends(create_local_session), redis=Depends(get_redis)):
+    # Here, you can use 'redis' to fetch or store data in Redis cache
+    response = await get_user_dao(user_id, dbSession=db, redis=redis)
     return response
 
 @user.get("/", tags=["Users"], response_model=Page[UserOutResponse])

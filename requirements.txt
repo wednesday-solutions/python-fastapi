@@ -110,3 +110,7 @@ alembic
 email-validator
 werkzeug
 fastapi-pagination
+aioredis
+flake8
+black
+pre-commit
