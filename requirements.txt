@@ -113,3 +113,5 @@ aioredis
 flake8
 black
 pre-commit
+pytest
+pytest-asyncio
