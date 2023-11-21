@@ -13,11 +13,12 @@ from sqlalchemy.pool import StaticPool
 load_dotenv()
 
 # Set the default values for connecting locally
-HOST = os.environ.get("DB_HOSTNAME")
-PORT = os.environ.get("DB_PORT")
-DBNAME = os.environ.get("DB_NAME")
-USERNAME = os.environ.get("DB_USERNAME")
-PASSWORD = os.environ.get("DB_PASSWORD")
+HOST = os.environ.get("DB_HOSTNAME", "localhost")
+PORT = os.environ.get("DB_PORT", "3306")
+DBNAME = os.environ.get("DB_NAME", "mydbname")
+USERNAME = os.environ.get("DB_USERNAME", "user")
+PASSWORD = os.environ.get("DB_PASSWORD", "password")
+
 
 if "pytest" in sys.modules:
     SQLALCHEMY_DATABASE_URL = "sqlite://"

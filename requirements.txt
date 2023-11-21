@@ -109,3 +109,4 @@ pdf2image
 alembic
 email-validator
 werkzeug
+aioredis
