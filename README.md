@@ -60,3 +60,29 @@ If you are new to AWS Copilot or you want to learn more about AWS Copilot, pleas
 docker run --name recorder-redis -p 6379:6379 -d redis:alpine
 ```
 or add the REDIS_URL in .env file
+
+### 6. Circuit breakers
+
+## Using the Circuit Breaker for External API Calls
+
+Our application uses a circuit breaker pattern to enhance its resilience against failures in external services. The circuit breaker prevents the application from performing operations that are likely to fail, allowing it to continue operating with degraded functionality instead of complete failure.
+
+## How to Use
+
+- For any external service call, wrap the call with the circuit breaker.
+- The circuit breaker is configured to trip after a certain number of consecutive failures. Once tripped, it will prevent further calls to the external service for a defined period.
+
+## Example
+
+Here's an example of using the circuit breaker in an API route:
+
+```
+@app.get("/external-service")
+async def external_service_endpoint():
+    try:
+        with circuit_breaker:
+            result = await external_service_call()
+            return {"message": result}
+    except CircuitBreakerError:
+        raise HTTPException(status_code=503, detail="Service temporarily unavailable")
+```
