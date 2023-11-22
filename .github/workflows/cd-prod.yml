@@ -39,4 +39,4 @@ jobs:
 
       - name: Deploy ECS
         run: |
-          ./scripts/update-ecs.sh ${{ env.ENVIRONMENT_NAME }}
+          ./scripts/update-ecs.sh develop
