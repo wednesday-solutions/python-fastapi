@@ -10,10 +10,12 @@ from fastapi.responses import JSONResponse
 from routes.users import user
 from fastapi_pagination import add_pagination
 from middlewares.rate_limiter_middleware import RateLimitMiddleware
+from middlewares.request_id_injection import RequestIdInjection
 from pybreaker import CircuitBreakerError
 from dependencies import circuit_breaker
 from utils.slack_notification_utils import send_slack_message
 import traceback
+from middlewares.request_id_injection import request_id_contextvar
 
 # Initializing the swagger docs
 app = FastAPI(
@@ -25,6 +27,8 @@ app = FastAPI(
 
 
 origins = ["*"]
+
+app.add_middleware(RequestIdInjection)
 
 # CORS middleware
 app.add_middleware(
@@ -41,7 +45,7 @@ app.include_router(user, prefix="/user")
 # Default API route
 @app.get("/")
 async def read_main():
-    1/0
+    print('Request ID:', request_id_contextvar.get())
     return {"response": "service up and running..!"}
 
 

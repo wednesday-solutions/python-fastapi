@@ -15,6 +15,7 @@ from utils.redis_utils import get_redis
 from utils.user_utils import get_current_user
 from typing import Annotated
 from fastapi.security import HTTPBearer
+from middlewares.request_id_injection import request_id_contextvar
 
 user = APIRouter()
 
@@ -23,12 +24,14 @@ httpBearerScheme = HTTPBearer()
 
 @user.post("/register", tags=["Users"])
 def register(payload: CreateUser, db: Session = Depends(create_local_session)):
+    print('Request ID:', request_id_contextvar.get())
     response = create_user_dao(data=payload, dbSession=db)
     return response
 
 
 @user.post("/signin", tags=["Users"])
 def login(payload: Login, db: Session = Depends(create_local_session)):
+    print('Request ID:', request_id_contextvar.get())
     response = signin(data=payload, dbSession=db)
     return response
 
@@ -40,6 +43,7 @@ async def profile(
     db: Session = Depends(create_local_session),
     redis=Depends(get_redis),
 ):
+    print('Request ID:', request_id_contextvar.get())
     # Here, you can use 'redis' to fetch or store data in Redis cache
     response = await get_user_dao(user_id, dbSession=db, redis=redis)
     return response
@@ -47,10 +51,12 @@ async def profile(
 
 @user.get("/", tags=["Users"], response_model=Page[UserOutResponse])
 def list_users(db: Session = Depends(create_local_session)):
+    print('Request ID:', request_id_contextvar.get())
     response = list_users_dao(dbSession=db)
     return response
 
 
 @user.get("/{user_id}/secure-route/", tags=["Users"], dependencies=[Depends(get_current_user)])
 def secure_route(token: Annotated[str, Depends(httpBearerScheme)], user_id: int):
+    print('Request ID:', request_id_contextvar.get())
     return {"message": "If you see this, you're authenticated"}
