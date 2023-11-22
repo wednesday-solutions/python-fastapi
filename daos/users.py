@@ -1,5 +1,4 @@
 import json
-from aioredis import Redis
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from constants import jwt_utils
@@ -13,7 +12,14 @@ from fastapi_pagination.ext.sqlalchemy import paginate
 from sqlalchemy import select
 from utils import redis_utils
 from utils.user_utils import check_existing_field, responseFormatter
+from datetime import datetime
 
+
+class CustomEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, datetime):
+            return o.isoformat()
+        return super().default(o)
 
 def get_user(user_id: int, dbSession: Session):
     try:
@@ -25,24 +31,27 @@ def get_user(user_id: int, dbSession: Session):
         # Check if the subject already exists in the database
         user = (
             dbSession.query(User)
-            .where(User.id == user_id)
-            .with_entities(
-                User.id,
-                User.name,
-                User.email,
-                User.mobile,
-                User.created_at,
-                User.updated_at,
-                User.deleted_at,
-            )
+            .filter(User.id == user_id)
             .first()
         )
         if user:
-            Redis.set(cache_key, json.dumps(user))
+            # Convert the User object to a dictionary with ISO-formatted dates
+            user_dict = {
+                "id": user.id,
+                "name": user.name,
+                "email": user.email,
+                "mobile": user.mobile,
+                "created_at": user.created_at.isoformat() if user.created_at else None,
+                "updated_at": user.updated_at.isoformat() if user.updated_at else None,
+                "deleted_at": user.deleted_at.isoformat() if user.deleted_at else None,
+            }
+
+            redis_utils.get_redis().set(cache_key, json.dumps(user_dict, cls=CustomEncoder))
+
+            return responseFormatter(messages["USER_DETAILS"], user_dict)
+
         if not user:
             raise Exception(messages["NO_USER_FOUND_FOR_ID"])
-
-        return responseFormatter(messages["USER_DETAILS"], user._asdict())
 
     except Exception as e:
         # Return a user-friendly error message to the client

@@ -37,15 +37,15 @@ def login(payload: Login, db: Session = Depends(create_local_session)):
 
 
 @user.get("/{user_id}", tags=["Users"], dependencies=[Depends(get_current_user)])
-async def profile(
+def profile(
     token: Annotated[str, Depends(httpBearerScheme)],
     user_id,
     db: Session = Depends(create_local_session),
-    redis=Depends(get_redis),
+    redis_instance=Depends(get_redis),
 ):
     print('Request ID:', request_id_contextvar.get())
     # Here, you can use 'redis' to fetch or store data in Redis cache
-    response = await get_user_dao(user_id, dbSession=db, redis=redis)
+    response = get_user_dao(user_id, dbSession=db)
     return response
 
 

@@ -1,7 +1,6 @@
-import aioredis
+import redis
 import os
 
 
-async def get_redis_pool():
-    redis_url = os.getenv("REDIS_URL", "redis://localhost:6379")
-    return aioredis.from_url(redis_url)
+def get_redis_pool():
+    return redis.Redis(host="localhost", port=6379, db=0)
