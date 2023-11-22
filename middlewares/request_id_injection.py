@@ -8,11 +8,11 @@ import uuid
 request_id_contextvar = contextvars.ContextVar("request_id", default=None)
 
 class RequestIdInjection(BaseHTTPMiddleware):
-    async def dispatch(self, request: Request, call_next):
+    def dispatch(self, request: Request, call_next):
         request_id = str(uuid.uuid4())
         request_id_contextvar.set(request_id)
         try:
-            return await call_next(request)
+            return call_next(request)
 
         except Exception as ex:
             print(ex)
