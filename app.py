@@ -12,6 +12,8 @@ from fastapi_pagination import add_pagination
 from middlewares.rate_limiter_middleware import RateLimitMiddleware
 from pybreaker import CircuitBreakerError
 from dependencies import circuit_breaker
+from utils.slack_notification_utils import send_slack_message
+import traceback
 
 # Initializing the swagger docs
 app = FastAPI(
@@ -39,6 +41,7 @@ app.include_router(user, prefix="/user")
 # Default API route
 @app.get("/")
 async def read_main():
+    1/0
     return {"response": "service up and running..!"}
 
 
@@ -80,6 +83,18 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
     return JSONResponse(status_code=exc.status_code, content={"success": False, "message": exc.detail})
+
+@app.exception_handler(Exception)
+async def http_exception_handler(request: Request, exc: Exception):
+    error_message = f'Error: {str(exc)}'
+    # Include the traceback in the response for debugging purposes
+    traceback_str = traceback.format_exc()
+    send_slack_message({ "text": f'```{traceback_str}```', "request_url": str(request.url), "request_method": str(request.method)})
+    
+    return JSONResponse(
+        status_code=500,
+        content={"success": False, "message": error_message }
+    )
 
 
 @app.get("/{path:path}")
