@@ -20,6 +20,7 @@ user = APIRouter()
 
 httpBearerScheme = HTTPBearer()
 
+
 @user.post("/register", tags=["Users"])
 def register(payload: CreateUser, db: Session = Depends(create_local_session)):
     response = create_user_dao(data=payload, dbSession=db)
@@ -33,15 +34,22 @@ def login(payload: Login, db: Session = Depends(create_local_session)):
 
 
 @user.get("/{user_id}", tags=["Users"], dependencies=[Depends(get_current_user)])
-async def profile(token: Annotated[str, Depends(httpBearerScheme)], user_id, db: Session = Depends(create_local_session), redis=Depends(get_redis)):
+async def profile(
+    token: Annotated[str, Depends(httpBearerScheme)],
+    user_id,
+    db: Session = Depends(create_local_session),
+    redis=Depends(get_redis),
+):
     # Here, you can use 'redis' to fetch or store data in Redis cache
     response = await get_user_dao(user_id, dbSession=db, redis=redis)
     return response
+
 
 @user.get("/", tags=["Users"], response_model=Page[UserOutResponse])
 def list_users(db: Session = Depends(create_local_session)):
     response = list_users_dao(dbSession=db)
     return response
+
 
 @user.get("/{user_id}/secure-route/", tags=["Users"], dependencies=[Depends(get_current_user)])
 def secure_route(token: Annotated[str, Depends(httpBearerScheme)], user_id: int):

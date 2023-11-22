@@ -114,3 +114,5 @@ aioredis
 flake8
 black
 pre-commit
+pybreaker
+pytest-asyncio

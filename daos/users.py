@@ -51,16 +51,8 @@ def get_user(user_id: int, dbSession: Session):
 
 def list_users(dbSession: Session):
     try:
-        query = (
-            select(
-                User.id,
-                User.name,
-                User.email,
-                User.mobile
-            )
-            .order_by(User.created_at)
-        )
-        
+        query = select(User.id, User.name, User.email, User.mobile).order_by(User.created_at)
+
         # Pass the Select object to the paginate function
         users = paginate(dbSession, query=query)
 
