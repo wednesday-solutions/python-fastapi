@@ -10,10 +10,12 @@ from fastapi.responses import JSONResponse
 from routes.users import user
 from fastapi_pagination import add_pagination
 from middlewares.rate_limiter_middleware import RateLimitMiddleware
+from middlewares.request_id_injection import RequestIdInjection
 from pybreaker import CircuitBreakerError
 from dependencies import circuit_breaker
 from utils.slack_notification_utils import send_slack_message
 import traceback
+from middlewares.request_id_injection import request_id_contextvar
 
 # Initializing the swagger docs
 app = FastAPI(
@@ -35,13 +37,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.add_middleware(RateLimitMiddleware)
+app.add_middleware(RequestIdInjection)
 app.include_router(user, prefix="/user")
 
 
 # Default API route
 @app.get("/")
 async def read_main():
-    1/0
+    print('Request ID:', request_id_contextvar.get())
     return {"response": "service up and running..!"}
 
 
@@ -88,8 +91,12 @@ async def http_exception_handler(request: Request, exc: HTTPException):
 async def http_exception_handler(request: Request, exc: Exception):
     error_message = f'Error: {str(exc)}'
     # Include the traceback in the response for debugging purposes
-    traceback_str = traceback.format_exc()
-    send_slack_message({ "text": f'```{traceback_str}```', "request_url": str(request.url), "request_method": str(request.method)})
+    traceback_str = traceback.format_exc(chain=False)
+    send_slack_message(
+        { 
+            "text": f'```\nRequestID: {request_id_contextvar.get()}\nRequest URL: {str(request.url)} \nRequest_method: {str(request.method)} \nTraceback: {traceback_str}```'
+        }
+    )
     
     return JSONResponse(
         status_code=500,
