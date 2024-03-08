@@ -8,10 +8,10 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from app.celery_tasks.tasks import add
-
+from app.routes.users import user
+from app.routes.celery_samples import celery_sample
 from app.config.base import settings
 from app.config.celery_utils import create_celery
-from app.routes import user
 from fastapi_pagination import add_pagination
 from app.middlewares.rate_limiter_middleware import RateLimitMiddleware
 from app.middlewares.request_id_injection import RequestIdInjection
@@ -31,6 +31,7 @@ def create_app() -> FastAPI:
     )
     current_app.celery_app = create_celery()
     current_app.include_router(user, prefix="/user")
+    current_app.include_router(celery_sample, prefix="/celery-sample")
     return current_app
 
 

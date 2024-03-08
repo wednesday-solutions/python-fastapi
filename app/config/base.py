@@ -1,6 +1,15 @@
 from pydantic import BaseSettings
 
 
+class CelerySettings(BaseSettings):
+    RESULT_EXPIRES: int
+    RESULT_PERSISTENT: bool
+    WORKER_SEND_TASK_EVENT: bool
+    WORKER_PREFETCH_MULTIPLIER: int
+
+    class Config:
+        env_file = ".config.celery"
+
 class DBSettings(BaseSettings):
     DB_HOSTNAME: str
     DB_PORT: str
@@ -24,3 +33,4 @@ class Settings(BaseSettings):
 
 db_settings = DBSettings()
 settings = Settings()
+celery_settings = CelerySettings()
