@@ -17,7 +17,7 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
 
         # Updated for aioredis v2.x
         redis_url = os.getenv("REDIS_URL", "redis://localhost:6379")
-        redis = aioredis.from_url(redis_url, encoding="utf-8", decode_responses=True)
+        redis = await aioredis.create_redis_pool(redis_url, encoding="utf-8")
 
         try:
             request_count = await redis.get(client_ip)
