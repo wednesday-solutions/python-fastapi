@@ -109,3 +109,5 @@ pre-commit
 pybreaker
 pytest-asyncio
 contextvars
+hiredis
+redis>4
