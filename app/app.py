@@ -7,15 +7,15 @@ from fastapi.exceptions import HTTPException
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from routes.users import user
+from app.routes import user
 from fastapi_pagination import add_pagination
-from middlewares.rate_limiter_middleware import RateLimitMiddleware
-from middlewares.request_id_injection import RequestIdInjection
+from app.middlewares.rate_limiter_middleware import RateLimitMiddleware
+from app.middlewares.request_id_injection import RequestIdInjection
 from pybreaker import CircuitBreakerError
 from dependencies import circuit_breaker
-from utils.slack_notification_utils import send_slack_message
+from app.utils.slack_notification_utils import send_slack_message
 import traceback
-from middlewares.request_id_injection import request_id_contextvar
+from app.middlewares.request_id_injection import request_id_contextvar
 
 # Initializing the swagger docs
 app = FastAPI(

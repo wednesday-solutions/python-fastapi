@@ -2,17 +2,15 @@ import json
 from aioredis import Redis
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
-from constants import jwt_utils
-from constants.messages.users import user_messages as messages
-from models.users import User
-from schemas.users import CreateUser
-from schemas.users import Login
-from schemas.users import UserOutResponse
+from app.constants import jwt_utils
+from app.constants.messages.users import user_messages as messages
+from app.models import User
+from app.schemas import CreateUser, UserOutResponse, Login
 from werkzeug.security import check_password_hash
 from fastapi_pagination.ext.sqlalchemy import paginate
 from sqlalchemy import select
-from utils import redis_utils
-from utils.user_utils import check_existing_field, responseFormatter
+from app.utils import redis_utils
+from app.utils.user_utils import check_existing_field, responseFormatter
 
 
 def get_user(user_id: int, dbSession: Session):

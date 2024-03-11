@@ -1,6 +1,6 @@
 import re
 
-from constants.messages.users import user_messages as messages
+from app.constants.messages.users import user_messages as messages
 from fastapi import HTTPException
 from pydantic import BaseModel
 from pydantic import validator

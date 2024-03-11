@@ -7,7 +7,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from werkzeug.security import generate_password_hash
 from sqlalchemy import event
 
-from config.db import engine
+from app.config.db import engine
 
 Base = declarative_base()
 
