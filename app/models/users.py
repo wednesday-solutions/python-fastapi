@@ -30,7 +30,7 @@ class User(Base):
 def hash_password_before_insert(mapper, connection, target):
     print("IN EVENT LISTENER")
     if target.password:
-        target.password = generate_password_hash(target.password)
+        target.password = generate_password_hash(target.password, method="pbkdf2")
 
 
 Base.metadata.create_all(bind=engine)

@@ -2,6 +2,7 @@ import json
 import os
 import sys
 
+from app.config.base import db_settings
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy import MetaData
@@ -13,12 +14,11 @@ from sqlalchemy.pool import StaticPool
 load_dotenv()
 
 # Set the default values for connecting locally
-HOST = os.environ.get("DB_HOSTNAME", "localhost")
-PORT = os.environ.get("DB_PORT", "3306")
-DBNAME = os.environ.get("DB_NAME", "mydbname")
-USERNAME = os.environ.get("DB_USERNAME", "user")
-PASSWORD = os.environ.get("DB_PASSWORD", "password")
-
+HOST = db_settings.DB_HOSTNAME
+PORT = db_settings.DB_PORT
+DBNAME = db_settings.DB_NAME
+USERNAME = db_settings.DB_USERNAME
+PASSWORD = db_settings.DB_PASSWORD
 
 if "pytest" in sys.modules:
     SQLALCHEMY_DATABASE_URL = "sqlite://"
@@ -44,11 +44,6 @@ elif "PYTHON_FASTAPI_TEMPLATE_CLUSTER_SECRET" in os.environ:
 
 else:
     print("Connecting local database..\n")
-    HOST = os.environ["DB_HOSTNAME"]
-    PORT = os.environ["DB_PORT"]
-    DBNAME = os.environ["DB_NAME"]
-    USERNAME = os.environ["DB_USERNAME"]
-    PASSWORD = os.environ["DB_PASSWORD"]
     engine = create_engine(f"mysql+pymysql://{USERNAME}:{PASSWORD}@{HOST}/{DBNAME}")
 
 meta = MetaData()
