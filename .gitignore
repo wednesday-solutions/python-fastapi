@@ -10,3 +10,5 @@ venv
 # Temp files
 tmp/
 temp/
+env.docker
+env.local
