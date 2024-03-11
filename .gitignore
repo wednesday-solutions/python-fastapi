@@ -1,6 +1,12 @@
-venv/
-__pycache__/
-*/__pycache__/
-*/*/__pycache__/
-python-fastapi/
-.vscode/
+# Local Environment
+env
+venv
+
+# Config file
+.env
+
+*__pycache__*
+
+# Temp files
+tmp/
+temp/
