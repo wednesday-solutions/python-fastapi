@@ -5,7 +5,8 @@ from sqlalchemy.orm import Session
 from app.constants import jwt_utils
 from app.constants.messages.users import user_messages as messages
 from app.models import User
-from app.schemas import CreateUser, UserOutResponse, Login
+from app.schemas.users.users_request import CreateUser, Login
+from app.schemas.users.users_response import UserOutResponse
 from werkzeug.security import check_password_hash
 from fastapi_pagination.ext.sqlalchemy import paginate
 from sqlalchemy import select
