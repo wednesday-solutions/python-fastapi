@@ -7,8 +7,10 @@ from fastapi.exceptions import HTTPException
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from app.celery_tasks.tasks import add
 
 from app.config.base import settings
+from app.config.celery_utils import create_celery
 from app.routes import user
 from fastapi_pagination import add_pagination
 from app.middlewares.rate_limiter_middleware import RateLimitMiddleware
@@ -27,11 +29,13 @@ def create_app() -> FastAPI:
         version="0.0.1",
         openapi_tags=[{"name": "FastAPI Template", "description": "API template using FastAPI."}],
     )
+    current_app.celery_app = create_celery()
     current_app.include_router(user, prefix="/user")
     return current_app
 
 
 app = create_app()
+celery = app.celery_app
 origins = settings.ALLOWED_HOSTS
 
 # CORS middleware
