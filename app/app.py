@@ -7,6 +7,8 @@ from fastapi.exceptions import HTTPException
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+
+from app.config.base import settings
 from app.routes import user
 from fastapi_pagination import add_pagination
 from app.middlewares.rate_limiter_middleware import RateLimitMiddleware
@@ -17,16 +19,20 @@ from app.utils.slack_notification_utils import send_slack_message
 import traceback
 from app.middlewares.request_id_injection import request_id_contextvar
 
-# Initializing the swagger docs
-app = FastAPI(
-    title="FastAPI Template",
-    description="This is my first API use FastAPI",
-    version="0.0.1",
-    openapi_tags=[{"name": "FastAPI Template", "description": "API template using FastAPI."}],
-)
+
+def create_app() -> FastAPI:
+    current_app = FastAPI(
+        title="FastAPI Template",
+        description="This is my first API use FastAPI",
+        version="0.0.1",
+        openapi_tags=[{"name": "FastAPI Template", "description": "API template using FastAPI."}],
+    )
+    current_app.include_router(user, prefix="/user")
+    return current_app
 
 
-origins = ["*"]
+app = create_app()
+origins = settings.ALLOWED_HOSTS
 
 # CORS middleware
 app.add_middleware(
@@ -38,7 +44,6 @@ app.add_middleware(
 )
 app.add_middleware(RateLimitMiddleware)
 app.add_middleware(RequestIdInjection)
-app.include_router(user, prefix="/user")
 
 
 # Default API route
@@ -87,20 +92,21 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 async def http_exception_handler(request: Request, exc: HTTPException):
     return JSONResponse(status_code=exc.status_code, content={"success": False, "message": exc.detail})
 
+
 @app.exception_handler(Exception)
 async def http_exception_handler(request: Request, exc: Exception):
     error_message = f'Error: {str(exc)}'
     # Include the traceback in the response for debugging purposes
     traceback_str = traceback.format_exc(chain=False)
     send_slack_message(
-        { 
+        {
             "text": f'```\nRequestID: {request_id_contextvar.get()}\nRequest URL: {str(request.url)} \nRequest_method: {str(request.method)} \nTraceback: {traceback_str}```'
         }
     )
-    
+
     return JSONResponse(
         status_code=500,
-        content={"success": False, "message": error_message }
+        content={"success": False, "message": error_message}
     )
 
 
