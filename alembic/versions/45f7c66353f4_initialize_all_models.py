@@ -9,9 +9,8 @@ from typing import Sequence, Union
 
 from alembic import op
 import sqlalchemy as sa
-import models
-from models import users  # noqa
-
+from app import models  # noqa
+from app.models import users # noqa
 
 # revision identifiers, used by Alembic.
 revision: str = "45f7c66353f4"

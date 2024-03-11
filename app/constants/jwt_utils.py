@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 import jwt
 import datetime
-from config.config import get_secret_key
+from app.config.config import get_secret_key
 
 
 def create_access_token(data: dict):

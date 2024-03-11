@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from fastapi import Request, HTTPException
-from constants import jwt_utils
+from app.constants import jwt_utils
 from fastapi import HTTPException
 
 

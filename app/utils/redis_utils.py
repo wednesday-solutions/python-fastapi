@@ -1,4 +1,4 @@
-from config.redis_config import get_redis_pool
+from app.config.redis_config import get_redis_pool
 
 
 async def get_redis():
