@@ -2,15 +2,16 @@ from fastapi import APIRouter
 from fastapi import Depends
 from sqlalchemy.orm import Session
 from fastapi_pagination import Page
-from app.config.db import create_local_session
-from app.daos import (
+from app.sessions.db import create_local_session
+from app.daos.users import (
     create_user as create_user_dao,
     get_user as get_user_dao,
     list_users as list_users_dao,
     login as signin,
 )
 from app.models import User
-from app.schemas import CreateUser, UserOutResponse, Login
+from app.schemas.users.users_request import CreateUser, Login
+from app.schemas.users.users_response import UserOutResponse
 from app.utils.redis_utils import get_redis
 from app.utils.user_utils import get_current_user
 from typing import Annotated

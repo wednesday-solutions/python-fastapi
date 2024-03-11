@@ -2,6 +2,7 @@ import json
 import os
 from logging.config import fileConfig
 
+from app.config.base import db_settings
 from dotenv import load_dotenv
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
@@ -11,6 +12,12 @@ from alembic import context
 load_dotenv()
 
 print("==" * 50, "\n\n\n", "OS ENVIRONMENT", os.environ, "\n\n\n", "==" * 50)
+
+HOST = db_settings.DB_HOSTNAME
+PORT = db_settings.DB_PORT
+DBNAME = db_settings.DB_NAME
+USERNAME = db_settings.DB_USERNAME
+PASSWORD = db_settings.DB_PASSWORD
 
 if "PYTHON_FASTAPI_TEMPLATE_CLUSTER_SECRET" in os.environ:
     print("Connecting to database on RDS..\n")
@@ -22,14 +29,6 @@ if "PYTHON_FASTAPI_TEMPLATE_CLUSTER_SECRET" in os.environ:
     DBNAME = dbSecretParsed["dbname"]
     USERNAME = dbSecretParsed["username"]
     PASSWORD = dbSecretParsed["password"]
-
-else:
-    print("Connecting local database..\n")
-    HOST = os.environ["DB_HOSTNAME"]
-    PORT = os.environ["DB_PORT"]
-    DBNAME = os.environ["DB_NAME"]
-    USERNAME = os.environ["DB_USERNAME"]
-    PASSWORD = os.environ["DB_PASSWORD"]
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

@@ -7,7 +7,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from werkzeug.security import generate_password_hash
 from sqlalchemy import event
 
-from app.config.db import engine
+from app.sessions.db import engine
 
 Base = declarative_base()
 
@@ -30,7 +30,7 @@ class User(Base):
 def hash_password_before_insert(mapper, connection, target):
     print("IN EVENT LISTENER")
     if target.password:
-        target.password = generate_password_hash(target.password)
+        target.password = generate_password_hash(target.password, method="pbkdf2")
 
 
 Base.metadata.create_all(bind=engine)

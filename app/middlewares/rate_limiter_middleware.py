@@ -1,10 +1,11 @@
+import os
+import datetime
+
+from app.config.redis_config import get_redis_pool
 from fastapi import FastAPI
+from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
-from fastapi.responses import JSONResponse
-import aioredis
-import datetime
-import os
 
 MAX_REQUESTS = 10
 TIME_WINDOW = 60
@@ -15,10 +16,7 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         client_ip = request.client.host
         now = datetime.datetime.now()
 
-        # Updated for aioredis v2.x
-        redis_url = os.getenv("REDIS_URL", "redis://localhost:6379")
-        redis = aioredis.from_url(redis_url, encoding="utf-8", decode_responses=True)
-
+        redis = await get_redis_pool()
         try:
             request_count = await redis.get(client_ip)
             request_count = int(request_count) if request_count else 0

@@ -48,6 +48,15 @@ class CreateUser(BaseModel):
             )
         return password
 
+    class Config:
+        schema_extra = {
+            "example": {
+                "name": "Anas Nadeem",
+                "email": "anas@gmail.com",
+                "mobile": "1234567890",
+                "password": "Test@123"
+            }
+        }
 
 class Login(BaseModel):
     email: str
@@ -59,26 +68,10 @@ class Login(BaseModel):
             raise ValueError("Invalid email address format")
         return email
 
-    @validator("password")
-    def validate_password_strength(cls, password):
-        if (
-            len(password) < 8
-            or not any(char.isupper() for char in password)
-            or not any(char.islower() for char in password)
-            or not any(char.isdigit() for char in password)
-            or not re.search(
-                r'[!@#$%^&*(),.?":{}|<>]', password
-            )  # The regular expression [!@#$%^&*(),.?":{}|<>] matches any of these special characters.
-        ):
-            raise HTTPException(status_code=400, detail=f"{str(messages['INVALID_CREDENTIALS'])}")
-        return password
-
-
-class UserOutResponse(BaseModel):
-    id: int = Field(alias="id")
-    name: str
-    email: str
-    mobile: str
-
     class Config:
-        orm_mode = True
+        schema_extra = {
+            "example": {
+                "email": "anas@gmail.com",
+                "password": "Test@123"
+            }
+        }
