@@ -4,6 +4,8 @@ venv
 
 # Config file
 .env
+env.docker
+env.local
 
 *__pycache__*
 

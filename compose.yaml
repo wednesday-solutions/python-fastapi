@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:latest
+    restart: always
+    env_file:
+      - .env.docker
+    environment:
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "echo 'SELECT 1' | mysql -hlocalhost -uroot -p${DB_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      - redis
+    networks:
+      - fast-api-network
+
+  redis:
+    image: redis:6-alpine
+    restart: always
+    networks:
+      - fast-api-network
+
+  wait-for-db:
+    image: atkrad/wait4x
+    depends_on:
+      db:
+        condition: service_healthy
+    command: tcp db:${DB_PORT} -t 30s -i 250ms
+    networks:
+      - fast-api-network
+
+  app:
+    build: .
+    restart: always
+    container_name: fast-api-app
+    env_file:
+      - ./.env.${ENVIRONMENT_NAME}
+    depends_on:
+      wait-for-db:
+        condition: service_completed_successfully
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+    environment:
+      ENVIRONMENT_NAME: "${ENVIRONMENT_NAME}"
+    networks:
+      - fast-api-network
+
+networks:
+  fast-api-network:
+    driver: bridge

@@ -1,1 +1,2 @@
-python -m pytest tests
+coverage run -m pytest
+coverage report 
