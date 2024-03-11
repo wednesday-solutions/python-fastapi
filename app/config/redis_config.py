@@ -1,7 +1,5 @@
 import aioredis
-import os
-
+from .base import settings
 
 async def get_redis_pool():
-    redis_url = os.getenv("REDIS_URL", "redis://localhost:6379")
-    return aioredis.from_url(redis_url)
+    return aioredis.from_url(settings.REDIS_URL, encoding="utf-8", decode_responses=True)
