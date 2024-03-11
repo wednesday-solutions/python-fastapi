@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from fastapi import Depends
 from sqlalchemy.orm import Session
 from fastapi_pagination import Page
-from app.config.db import create_local_session
+from app.sessions.db import create_local_session
 from app.daos.users import (
     create_user as create_user_dao,
     get_user as get_user_dao,
