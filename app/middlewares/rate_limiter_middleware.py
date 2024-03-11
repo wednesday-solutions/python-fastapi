@@ -1,5 +1,4 @@
 import os
-import aioredis
 import datetime
 
 from app.config.redis_config import get_redis_pool

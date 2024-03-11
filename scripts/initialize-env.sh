@@ -21,7 +21,7 @@ echo
 echo "Installing project dependencies"
 echo 
 # Install requirements/dependencies
-pip install -r requirements.txt
+pip install -r requirements.txt --no-cache-dir
 
 pip uninstall httpcore -y
 pip uninstall httpx -y

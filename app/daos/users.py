@@ -1,5 +1,5 @@
 import json
-from aioredis import Redis
+from redis import Redis
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from app.constants import jwt_utils
