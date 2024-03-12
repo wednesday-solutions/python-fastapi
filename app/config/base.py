@@ -29,7 +29,11 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
 
-
+class CachedEndpoints(BaseSettings):
+    CACHED_ENDPOINTS:list=[
+        '/cache-sample/'
+    ]
 db_settings = DBSettings()
 settings = Settings()
 celery_settings = CelerySettings()
+cached_endpoints=CachedEndpoints()
