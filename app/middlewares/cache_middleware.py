@@ -36,7 +36,6 @@ class CacheMiddleware(BaseHTTPMiddleware):
             return await call_next(request)
 
         stored_cache = await retrieve_cache(key)
-        print(stored_cache)
         res = stored_cache and cache_control != 'no-cache'
 
         if not res:
@@ -59,8 +58,7 @@ class CacheMiddleware(BaseHTTPMiddleware):
 
         else:
             # If the response is cached, return it directly
-            json_data_str = stored_cache[0].decode('utf-8')
             headers = {
                 'Cache-Control': f"max-age:{stored_cache[1]}"
             }
-            return StreamingResponse(iter([json_data_str]), media_type="application/json", headers=headers)
+            return StreamingResponse(iter([stored_cache[0]]), media_type="application/json", headers=headers)
