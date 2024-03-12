@@ -2,8 +2,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_pagination import add_pagination
 from fastapi.exceptions import HTTPException, RequestValidationError
-from app.config.base import settings
+from app.config.base import cached_endpoints, settings
 from app.config.celery_utils import create_celery
+from app.middlewares.cache_middleware import CacheMiddleware
 from app.middlewares.rate_limiter_middleware import RateLimitMiddleware
 from app.middlewares.request_id_injection import RequestIdInjection
 
@@ -36,7 +37,7 @@ app.add_middleware(
 )
 app.add_middleware(RateLimitMiddleware)
 app.add_middleware(RequestIdInjection)
-
+app.add_middleware(CacheMiddleware, cached_endpoints=cached_endpoints.CACHED_ENDPOINTS)
 # Include the routers
 app.include_router(api_router, prefix="/api")
 
