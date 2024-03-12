@@ -22,21 +22,13 @@ import traceback
 from app.middlewares.request_id_injection import request_id_contextvar
 
 
-def create_app() -> FastAPI:
-    current_app = FastAPI(
-        title="FastAPI Template",
-        description="This is my first API use FastAPI",
-        version="0.0.1",
-        openapi_tags=[{"name": "FastAPI Template", "description": "API template using FastAPI."}],
-    )
-    current_app.celery_app = create_celery()
-    current_app.include_router(user, prefix="/user")
-    current_app.include_router(celery_sample, prefix="/celery-sample")
-    return current_app
-
-
-app = create_app()
-celery = app.celery_app
+app = FastAPI(
+    title="FastAPI Template",
+    description="This is my first API use FastAPI",
+    version="0.0.1",
+    openapi_tags=[{"name": "FastAPI Template", "description": "API template using FastAPI."}],
+)
+celery = create_celery()
 origins = settings.ALLOWED_HOSTS
 
 # CORS middleware
@@ -49,8 +41,8 @@ app.add_middleware(
 )
 app.add_middleware(RateLimitMiddleware)
 app.add_middleware(RequestIdInjection)
-
-
+app.include_router(user, prefix="/user")
+app.include_router(celery_sample,prefix='/celery-samples')
 # Default API route
 @app.get("/")
 async def read_main():
