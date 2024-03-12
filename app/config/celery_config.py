@@ -14,7 +14,7 @@ def route_task(name, args, kwargs, options, task=None, **kw):
 
 class BaseConfig:
     CELERY_BROKER_URL: str = f"{settings.REDIS_URL}/6"
-    CELERY_RESULT_BACKEND: str = f"{settings.REDIS_URL}/7"
+    CELERY_RESULT_BACKEND: str = f"{settings.REDIS_URL}/6"
 
     CELERY_TASK_ROUTES = (route_task,)
 
