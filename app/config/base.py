@@ -26,7 +26,6 @@ class Settings(BaseSettings):
     REDIS_URL: str
     SLACK_WEBHOOK_URL: str
     ALLOWED_HOSTS: list = ['*']
-
     class Config:
         env_file = ".env"
 
