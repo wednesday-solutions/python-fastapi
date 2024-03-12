@@ -4,6 +4,7 @@ from fastapi import Request
 from starlette.concurrency import iterate_in_threadpool
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import StreamingResponse, Response
+from app.config.base import settings
 
 from app.wrappers.cache_wrappers import create_cache, retrieve_cache
 
@@ -27,7 +28,7 @@ class CacheMiddleware(BaseHTTPMiddleware):
         cache_control = request.headers.get('Cache-Control', None)
         auth = request.headers.get('Authorization', "token public")
         token = auth.split(" ")[1]
-
+        max_age=settings.CACHE_MAX_AGE
         key = f"{path_url}_{token}"
 
         matches = self.matches_any_path(path_url)
@@ -46,13 +47,8 @@ class CacheMiddleware(BaseHTTPMiddleware):
             if response.status_code == 200:
                 if cache_control == 'no-store':
                     return response
-
-                if not cache_control:
-                    max_age = 60
-                elif "max-age" in cache_control:
+                if "max-age" in cache_control:
                     max_age = int(cache_control.split("=")[1])
-                else:
-                    max_age = 60
                 await create_cache(response_body[0].decode(), key, max_age)
             return response
 

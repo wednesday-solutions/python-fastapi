@@ -26,6 +26,7 @@ class Settings(BaseSettings):
     REDIS_URL: str
     SLACK_WEBHOOK_URL: str
     ALLOWED_HOSTS: list = ['*']
+    CACHE_MAX_AGE:int =60
     class Config:
         env_file = ".env"
 
