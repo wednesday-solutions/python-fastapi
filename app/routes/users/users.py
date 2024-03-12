@@ -12,7 +12,6 @@ from app.daos.users import (
 from app.models import User
 from app.schemas.users.users_request import CreateUser, Login
 from app.schemas.users.users_response import UserOutResponse
-from app.utils.redis_utils import get_redis
 from app.utils.user_utils import get_current_user
 from typing import Annotated
 from fastapi.security import HTTPBearer
@@ -37,16 +36,14 @@ def login(payload: Login, db: Session = Depends(create_local_session)):
     return response
 
 
-@user_router.get("/{user_id}", tags=["Users"], dependencies=[Depends(get_current_user)])
-async def profile(
+@user_router.get("/{user_id}", tags=["Users"], dependencies=[Depends(get_current_user)], response_model=UserOutResponse)
+def profile(
     token: Annotated[str, Depends(httpBearerScheme)],
     user_id,
     db: Session = Depends(create_local_session),
-    redis=Depends(get_redis),
 ):
     print('Request ID:', request_id_contextvar.get())
-    # Here, you can use 'redis' to fetch or store data in Redis cache
-    response = await get_user_dao(user_id, dbSession=db, redis=redis)
+    response = get_user_dao(user_id, dbSession=db)
     return response
 
 

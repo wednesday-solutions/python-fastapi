@@ -1,4 +1,6 @@
 import json
+import pickle
+
 from redis import Redis
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
@@ -10,17 +12,15 @@ from app.schemas.users.users_response import UserOutResponse
 from werkzeug.security import check_password_hash
 from fastapi_pagination.ext.sqlalchemy import paginate
 from sqlalchemy import select
-from app.utils import redis_utils
 from app.utils.user_utils import check_existing_field, responseFormatter
-
 
 def get_user(user_id: int, dbSession: Session):
     try:
         cache_key = f"user:{user_id}"
-        cached_user = redis_utils.get_redis().get(cache_key)
 
+        cached_user = Redis().get(cache_key)
         if cached_user:
-            return json.loads(cached_user)
+            return pickle.loads(cached_user)
         # Check if the subject already exists in the database
         user = (
             dbSession.query(User)
@@ -37,11 +37,11 @@ def get_user(user_id: int, dbSession: Session):
             .first()
         )
         if user:
-            Redis.set(cache_key, json.dumps(user))
+            Redis().set(cache_key, pickle.dumps(user))
         if not user:
             raise Exception(messages["NO_USER_FOUND_FOR_ID"])
 
-        return responseFormatter(messages["USER_DETAILS"], user._asdict())
+        return user
 
     except Exception as e:
         # Return a user-friendly error message to the client
