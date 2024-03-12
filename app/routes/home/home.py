@@ -9,6 +9,10 @@ from typing import Annotated
 from fastapi.security import HTTPBearer
 from app.middlewares.request_id_injection import request_id_contextvar
 from app.daos.home import external_service_call
+from pybreaker import CircuitBreakerError
+from dependencies import circuit_breaker
+from fastapi import HTTPException
+from fastapi.responses import JSONResponse
 
 home_router = APIRouter()
 
@@ -22,7 +26,7 @@ async def read_main():
 @home_router.get("/external-service", tags=["Home"])
 async def external_service_endpoint():
     try:
-        with circuit_breaker:
+        with circuit_breaker.calling():
             result = await external_service_call()
             return {"message": result}
     except CircuitBreakerError:

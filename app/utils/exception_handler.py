@@ -10,9 +10,8 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from pybreaker import CircuitBreakerError
-from dependencies import circuit_breaker
 from app.utils.slack_notification_utils import send_slack_message
+from app.middlewares.request_id_injection import request_id_contextvar
 
 
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
@@ -35,7 +34,6 @@ async def exception_handler(request: Request, exc: Exception):
             "text": f'```\nRequestID: {request_id_contextvar.get()}\nRequest URL: {str(request.url)} \nRequest_method: {str(request.method)} \nTraceback: {traceback_str}```'
         }
     )
-    
     return JSONResponse(
         status_code=500,
         content={"success": False, "message": error_message }
