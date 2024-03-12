@@ -1,13 +1,14 @@
+import random
 from fastapi import APIRouter
 from app.celery_tasks.tasks import add
 from fastapi.security import HTTPBearer
 from app.middlewares.request_id_injection import request_id_contextvar
 
-celery_sample = APIRouter()
+cache_sample_router = APIRouter()
 httpBearerScheme = HTTPBearer()
 
-@celery_sample.post("/create-task", tags=["Celery-Sample"])
-def create_task():
+@cache_sample_router.get("/get-cache", tags=["Cache-Sample"])
+def get_cache():
     print('Request ID:', request_id_contextvar.get())
-    response = add.delay(10, 20)
-    return {"task_id": response.id}
+    response = random.randint(100,1000)
+    return {"random value is": response}
