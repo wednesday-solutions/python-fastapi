@@ -4,11 +4,12 @@ venv
 
 # Config file
 .env
-env.docker
-env.local
+.env.docker
+.env.local
 
 *__pycache__*
 
 # Temp files
 tmp/
 temp/
+*.xml

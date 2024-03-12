@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_pagination import add_pagination
 from fastapi.exceptions import HTTPException, RequestValidationError
+from app.config.base import settings
+from app.config.celery_utils import create_celery
 from app.middlewares.rate_limiter_middleware import RateLimitMiddleware
 from app.middlewares.request_id_injection import RequestIdInjection
 
@@ -13,7 +15,7 @@ from app.utils.exception_handler import (
 )
 
 
-# Initializing the swagger docs
+
 app = FastAPI(
     title="FastAPI Template",
     description="This is my first API use FastAPI",
@@ -21,8 +23,8 @@ app = FastAPI(
     openapi_tags=[{"name": "FastAPI Template", "description": "API template using FastAPI."}],
     docs_url="/",
 )
-
-origins = ["*"]
+celery = create_celery()
+origins = settings.ALLOWED_HOSTS
 
 # CORS middleware
 app.add_middleware(

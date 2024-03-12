@@ -111,3 +111,4 @@ pytest-asyncio
 contextvars
 hiredis
 redis>4
+celery>=5.3.6
