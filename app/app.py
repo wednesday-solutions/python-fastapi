@@ -1,16 +1,26 @@
+import sentry_sdk
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_pagination import add_pagination
 from fastapi.exceptions import HTTPException, RequestValidationError
+from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
+
 from app.config.base import cached_endpoints, settings
 from app.config.celery_utils import create_celery
 from app.middlewares.cache_middleware import CacheMiddleware
 from app.middlewares.rate_limiter_middleware import RateLimitMiddleware
 from app.middlewares.request_id_injection import RequestIdInjection
-
 from app.routes import api_router
 from app.utils.exception_handler import exception_handler, validation_exception_handler, http_exception_handler
 
+
+# Sentry Initialization
+if settings.SENTRY_DSN:
+    sentry_sdk.init(
+        dsn=settings.SENTRY_DSN,
+        traces_sample_rate=1.0,  # Sample rate of 100%
+    )
 
 app = FastAPI(
     title="FastAPI Template",
@@ -22,7 +32,7 @@ app = FastAPI(
 celery = create_celery()
 origins = settings.ALLOWED_HOSTS
 
-# CORS middleware
+# Middlewares
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -33,6 +43,11 @@ app.add_middleware(
 app.add_middleware(RateLimitMiddleware)
 app.add_middleware(RequestIdInjection)
 app.add_middleware(CacheMiddleware, cached_endpoints=cached_endpoints.CACHED_ENDPOINTS)
+
+try:
+    app.add_middleware(SentryAsgiMiddleware)
+except Exception as e:
+    print(f"Error while adding Sentry Middleware: {e}")
 
 # Include the routers
 app.include_router(api_router, prefix="/api")
