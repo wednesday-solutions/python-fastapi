@@ -1,10 +1,9 @@
-from fastapi import APIRouter
+from dependencies import circuit_breaker
+from fastapi import APIRouter, HTTPException
+from fastapi.responses import JSONResponse
 from app.middlewares.request_id_injection import request_id_contextvar
 from app.daos.home import external_service_call
 from pybreaker import CircuitBreakerError
-from dependencies import circuit_breaker
-from fastapi import HTTPException
-from fastapi.responses import JSONResponse
 
 home_router = APIRouter()
 

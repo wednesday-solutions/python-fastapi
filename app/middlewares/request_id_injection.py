@@ -1,8 +1,9 @@
+import contextvars
+import uuid
+
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from fastapi.responses import JSONResponse
-import contextvars
-import uuid
 
 request_id_contextvar = contextvars.ContextVar("request_id", default=None)
 

@@ -1,5 +1,5 @@
 echo "Enabling Pre Commit Hooks"
-#Enabling Pre-Commit hooks gor git
+#Enabling Pre-Commit hooks for git
 pre-commit install
 echo
 

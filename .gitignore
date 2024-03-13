@@ -9,6 +9,9 @@ venv
 
 *__pycache__*
 
+# Test files
+*.coverage
+
 # Temp files
 tmp/
 temp/

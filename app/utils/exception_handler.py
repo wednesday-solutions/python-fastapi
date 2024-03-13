@@ -1,8 +1,8 @@
 import traceback
+
 from fastapi import Request
 from fastapi.encoders import jsonable_encoder
-from fastapi.exceptions import HTTPException
-from fastapi.exceptions import RequestValidationError
+from fastapi.exceptions import HTTPException, RequestValidationError
 from fastapi.responses import JSONResponse
 
 from app.utils.slack_notification_utils import send_slack_message

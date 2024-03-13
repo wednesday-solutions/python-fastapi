@@ -33,6 +33,7 @@ app.add_middleware(
 app.add_middleware(RateLimitMiddleware)
 app.add_middleware(RequestIdInjection)
 app.add_middleware(CacheMiddleware, cached_endpoints=cached_endpoints.CACHED_ENDPOINTS)
+
 # Include the routers
 app.include_router(api_router, prefix="/api")
 

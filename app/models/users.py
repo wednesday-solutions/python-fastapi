@@ -1,11 +1,10 @@
-from sqlalchemy import Column
+from sqlalchemy import Column, event
 from sqlalchemy.sql import func
 from sqlalchemy.sql.sqltypes import DateTime
 from sqlalchemy.sql.sqltypes import Integer
 from sqlalchemy.sql.sqltypes import String
 from sqlalchemy.ext.declarative import declarative_base
 from werkzeug.security import generate_password_hash
-from sqlalchemy import event
 
 from app.sessions.db import engine
 
