@@ -9,12 +9,7 @@ from app.middlewares.rate_limiter_middleware import RateLimitMiddleware
 from app.middlewares.request_id_injection import RequestIdInjection
 
 from app.routes import api_router
-from app.utils.exception_handler import (
-    exception_handler,
-    validation_exception_handler,
-    http_exception_handler
-)
-
+from app.utils.exception_handler import exception_handler, validation_exception_handler, http_exception_handler
 
 
 app = FastAPI(
@@ -38,6 +33,7 @@ app.add_middleware(
 app.add_middleware(RateLimitMiddleware)
 app.add_middleware(RequestIdInjection)
 app.add_middleware(CacheMiddleware, cached_endpoints=cached_endpoints.CACHED_ENDPOINTS)
+
 # Include the routers
 app.include_router(api_router, prefix="/api")
 

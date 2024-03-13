@@ -1,8 +1,6 @@
-from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from fastapi import Request, HTTPException
 from app.constants import jwt_utils
-from fastapi import HTTPException
 
 
 def responseFormatter(message, data=None):

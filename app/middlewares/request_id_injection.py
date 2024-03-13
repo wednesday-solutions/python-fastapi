@@ -1,11 +1,12 @@
-from fastapi import FastAPI
-from starlette.middleware.base import BaseHTTPMiddleware
-from starlette.requests import Request
-from fastapi.responses import JSONResponse
 import contextvars
 import uuid
 
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.requests import Request
+from fastapi.responses import JSONResponse
+
 request_id_contextvar = contextvars.ContextVar("request_id", default=None)
+
 
 class RequestIdInjection(BaseHTTPMiddleware):
     def dispatch(self, request: Request, call_next):

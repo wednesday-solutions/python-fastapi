@@ -1,11 +1,8 @@
 import re
 
-from app.constants.messages.users import user_messages as messages
-from fastapi import HTTPException
 from pydantic import BaseModel
 from pydantic import validator
 from email_validator import validate_email
-from pydantic import Field
 
 
 class CreateUser(BaseModel):
@@ -54,9 +51,10 @@ class CreateUser(BaseModel):
                 "name": "Anas Nadeem",
                 "email": "anas@gmail.com",
                 "mobile": "1234567890",
-                "password": "Test@123"
+                "password": "Test@123",
             }
         }
+
 
 class Login(BaseModel):
     email: str
@@ -69,9 +67,4 @@ class Login(BaseModel):
         return email
 
     class Config:
-        schema_extra = {
-            "example": {
-                "email": "anas@gmail.com",
-                "password": "Test@123"
-            }
-        }
+        schema_extra = {"example": {"email": "anas@gmail.com", "password": "Test@123"}}

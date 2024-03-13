@@ -1,8 +1,4 @@
-import os
-import datetime
-
 from app.config.redis_config import get_redis_pool
-from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
@@ -14,7 +10,6 @@ TIME_WINDOW = 60
 class RateLimitMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         client_ip = request.client.host
-        now = datetime.datetime.now()
 
         redis = await get_redis_pool()
         try:

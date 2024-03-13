@@ -1,6 +1,4 @@
-import os
 from functools import lru_cache
-from kombu import Queue
 
 from app.config.base import settings
 
