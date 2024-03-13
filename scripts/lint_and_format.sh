@@ -4,9 +4,9 @@
 # set -e
 
 echo "Running Flake8 for linting..."
-flake8 .
+flake8 app/
 
 echo "Running Black for code formatting..."
-black .
+black app/
 
 echo "Linting and formatting complete!"

@@ -10,6 +10,7 @@ class CelerySettings(BaseSettings):
     class Config:
         env_file = ".config.celery"
 
+
 class DBSettings(BaseSettings):
     DB_HOSTNAME: str
     DB_PORT: str
@@ -25,16 +26,18 @@ class Settings(BaseSettings):
     SECRET_KEY: str
     REDIS_URL: str
     SLACK_WEBHOOK_URL: str
-    ALLOWED_HOSTS: list = ['*']
-    CACHE_MAX_AGE:int =60
+    ALLOWED_HOSTS: list = ["*"]
+    CACHE_MAX_AGE: int = 60
+
     class Config:
         env_file = ".env"
 
+
 class CachedEndpoints(BaseSettings):
-    CACHED_ENDPOINTS:list=[
-        '/cache-sample/'
-    ]
+    CACHED_ENDPOINTS: list = ["/cache-sample/"]
+
+
 db_settings = DBSettings()
 settings = Settings()
 celery_settings = CelerySettings()
-cached_endpoints=CachedEndpoints()
+cached_endpoints = CachedEndpoints()

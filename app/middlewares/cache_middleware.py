@@ -8,14 +8,16 @@ from app.config.base import settings
 
 from app.wrappers.cache_wrappers import create_cache, retrieve_cache
 
+
 class CacheMiddleware(BaseHTTPMiddleware):
     def __init__(
-            self,
-            app,
-            cached_endpoints: List[str],
+        self,
+        app,
+        cached_endpoints: List[str],
     ):
         super().__init__(app)
         self.cached_endpoints = cached_endpoints
+
     def matches_any_path(self, path_url):
         for pattern in self.cached_endpoints:
             if pattern in path_url:
@@ -25,19 +27,19 @@ class CacheMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next) -> Response:
         path_url = request.url.path
         request_type = request.method
-        cache_control = request.headers.get('Cache-Control', None)
-        auth = request.headers.get('Authorization', "token public")
+        cache_control = request.headers.get("Cache-Control", None)
+        auth = request.headers.get("Authorization", "token public")
         token = auth.split(" ")[1]
-        max_age=settings.CACHE_MAX_AGE
+        max_age = settings.CACHE_MAX_AGE
         key = f"{path_url}_{token}"
 
         matches = self.matches_any_path(path_url)
 
-        if not matches or request_type != 'GET':
+        if not matches or request_type != "GET":
             return await call_next(request)
 
         stored_cache = await retrieve_cache(key)
-        res = stored_cache and cache_control != 'no-cache'
+        res = stored_cache and cache_control != "no-cache"
 
         if not res:
             response: Response = await call_next(request)
@@ -45,7 +47,7 @@ class CacheMiddleware(BaseHTTPMiddleware):
             response.body_iterator = iterate_in_threadpool(iter(response_body))
 
             if response.status_code == 200:
-                if cache_control == 'no-store':
+                if cache_control == "no-store":
                     return response
                 if "max-age" in cache_control:
                     max_age = int(cache_control.split("=")[1])
@@ -54,7 +56,5 @@ class CacheMiddleware(BaseHTTPMiddleware):
 
         else:
             # If the response is cached, return it directly
-            headers = {
-                'Cache-Control': f"max-age:{stored_cache[1]}"
-            }
+            headers = {"Cache-Control": f"max-age:{stored_cache[1]}"}
             return StreamingResponse(iter([stored_cache[0]]), media_type="application/json", headers=headers)

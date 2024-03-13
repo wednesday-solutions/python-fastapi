@@ -1,16 +1,15 @@
 """initialize all models
 
 Revision ID: 45f7c66353f4
-Revises: 
+Revises:
 Create Date: 2023-10-16 11:46:50.753722
 
 """
+
 from typing import Sequence, Union
 
-from alembic import op
-import sqlalchemy as sa
 from app import models  # noqa
-from app.models import users # noqa
+from app.models import users  # noqa
 
 # revision identifiers, used by Alembic.
 revision: str = "45f7c66353f4"

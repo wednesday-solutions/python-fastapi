@@ -112,3 +112,4 @@ contextvars
 hiredis
 redis>4
 celery>=5.3.6
+pytest-cov
