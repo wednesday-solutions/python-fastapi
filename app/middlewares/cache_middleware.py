@@ -57,5 +57,5 @@ class CacheMiddleware(BaseHTTPMiddleware):
                         await create_cache(response_body[0].decode(), key, max_age)
             elif matches:
                 await create_cache(response_body[0].decode(), key, max_age)
-            return response
+        return response
 
