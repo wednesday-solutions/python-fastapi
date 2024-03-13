@@ -1,10 +1,7 @@
 import json
-import pickle
 
-from redis import Redis
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
-from sqlalchemy.orm.attributes import instance_dict
 from app.constants import jwt_utils
 from app.constants.messages.users import user_messages as messages
 from app.models import User
@@ -14,6 +11,7 @@ from fastapi_pagination.ext.sqlalchemy import paginate
 from sqlalchemy import select
 from app.utils.user_utils import check_existing_field, responseFormatter
 from app.wrappers.cache_wrappers import create_cache, retrieve_cache
+
 
 async def get_user(user_id: int, dbSession: Session):
     try:
