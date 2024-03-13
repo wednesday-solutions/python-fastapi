@@ -1,19 +1,23 @@
-from typing import List
+from __future__ import annotations
+
 import re
+
 from fastapi import Request
 from starlette.concurrency import iterate_in_threadpool
 from starlette.middleware.base import BaseHTTPMiddleware
-from starlette.responses import StreamingResponse, Response
-from app.config.base import settings
+from starlette.responses import Response
+from starlette.responses import StreamingResponse
 
-from app.wrappers.cache_wrappers import create_cache, retrieve_cache
+from app.config.base import settings
+from app.wrappers.cache_wrappers import create_cache
+from app.wrappers.cache_wrappers import retrieve_cache
 
 
 class CacheMiddleware(BaseHTTPMiddleware):
     def __init__(
         self,
         app,
-        cached_endpoints: List[str],
+        cached_endpoints: list[str],
     ):
         super().__init__(app)
         self.cached_endpoints = cached_endpoints
@@ -33,8 +37,8 @@ class CacheMiddleware(BaseHTTPMiddleware):
         max_age = settings.CACHE_MAX_AGE
         key = f"{path_url}_{token}"
         matches = self.matches_any_path(path_url)
-        
-        if request_type != 'GET':
+
+        if request_type != "GET":
             return await call_next(request)
 
         stored_cache = await retrieve_cache(key)
@@ -47,10 +51,10 @@ class CacheMiddleware(BaseHTTPMiddleware):
         response_body = [chunk async for chunk in response.body_iterator]
         response.body_iterator = iterate_in_threadpool(iter(response_body))
         if response.status_code == 200:
-            if cache_control == 'no-store':
+            if cache_control == "no-store":
                 return response
             if cache_control:
-                max_age_match = re.search(r'max-age=(\d+)', cache_control)
+                max_age_match = re.search(r"max-age=(\d+)", cache_control)
                 if max_age_match:
                     max_age = int(max_age_match.group(1))
                     if max_age:
@@ -58,4 +62,3 @@ class CacheMiddleware(BaseHTTPMiddleware):
             elif matches:
                 await create_cache(response_body[0].decode(), key, max_age)
         return response
-
