@@ -30,12 +30,14 @@ class CacheMiddleware(BaseHTTPMiddleware):
         token = auth.split(" ")[1]
         max_age=settings.CACHE_MAX_AGE
         key = f"{path_url}_{token}"
-
+        #checking if end point has been added into cached endpoint
         matches = self.matches_any_path(path_url)
-
-        if not matches or request_type != 'GET':
+        
+        #check if endpoint method is get if not call next function or middleware in chain
+        if request_type != 'GET':
             return await call_next(request)
 
+        #getting stored cache for endpoint
         stored_cache = await retrieve_cache(key)
         res = stored_cache and cache_control != 'no-cache'
 
@@ -43,13 +45,18 @@ class CacheMiddleware(BaseHTTPMiddleware):
             response: Response = await call_next(request)
             response_body = [chunk async for chunk in response.body_iterator]
             response.body_iterator = iterate_in_threadpool(iter(response_body))
-
+        #checking if response is success
             if response.status_code == 200:
-                if cache_control and cache_control == 'no-store':
+        #check if cache header is no-strore if true it return (Applicable for cached endpoint as well as cache control header in request)
+                if cache_control == 'no-store':
                     return response
-                if cache_control and "max-age" in cache_control:
+        #check if cache control has max has param if true create a cache for endpoint
+                elif cache_control and "max-age" in cache_control:
                     max_age = int(cache_control.split("=")[1])
-                await create_cache(response_body[0].decode(), key, max_age)
+                    await create_cache(response_body[0].decode(), key, max_age)
+        # no cache-control header is present but endpoint is in cached endpoint so by default it is caching response for 60 second
+                elif matches:
+                    await create_cache(response_body[0].decode(), key, max_age)
             return response
 
         else:
