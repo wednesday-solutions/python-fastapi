@@ -1,3 +1,8 @@
+echo "Enabling Pre Commit Hooks"
+#Enabling Pre-Commit hooks gor git
+pre-commit install
+echo
+
 echo "Initializing local python environment"
 # Initialize python environment
 python -m venv venv
