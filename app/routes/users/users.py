@@ -36,13 +36,13 @@ def login(payload: Login, db: Session = Depends(create_local_session)):
 
 
 @user_router.get("/{user_id}", tags=["Users"], dependencies=[Depends(get_current_user)], response_model=UserOutResponse)
-def profile(
+async def profile(
     token: Annotated[str, Depends(httpBearerScheme)],
     user_id,
     db: Session = Depends(create_local_session),
 ):
     print("Request ID:", request_id_contextvar.get())
-    response = get_user_dao(user_id, dbSession=db)
+    response = await get_user_dao(user_id, dbSession=db)
     return response
 
 

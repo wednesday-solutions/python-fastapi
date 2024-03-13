@@ -14,7 +14,7 @@ async def retrieve_cache(key: str):
     redis = await get_redis_pool()
     data = await redis.get(key)
     if not data:
-        return None
+        return None, None
     expire = await redis.ttl(key)
     return data, expire
 
