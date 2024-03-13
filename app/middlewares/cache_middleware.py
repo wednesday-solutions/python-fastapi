@@ -1,5 +1,5 @@
 from typing import List
-
+import re
 from fastapi import Request
 from starlette.concurrency import iterate_in_threadpool
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -19,8 +19,8 @@ class CacheMiddleware(BaseHTTPMiddleware):
         self.cached_endpoints = cached_endpoints
 
     def matches_any_path(self, path_url):
-        for pattern in self.cached_endpoints:
-            if pattern in path_url:
+        for end_point in self.cached_endpoints:
+            if end_point in path_url:
                 return True
         return False
 
@@ -40,21 +40,22 @@ class CacheMiddleware(BaseHTTPMiddleware):
         stored_cache = await retrieve_cache(key)
         res = stored_cache and cache_control != "no-cache"
 
-        if not res:
-            response: Response = await call_next(request)
-            response_body = [chunk async for chunk in response.body_iterator]
-            response.body_iterator = iterate_in_threadpool(iter(response_body))
-            if response.status_code == 200:
-                if cache_control == 'no-store':
-                    return response
-                elif cache_control and "max-age" in cache_control:
-                    max_age = int(cache_control.split("=")[1])
-                    await create_cache(response_body[0].decode(), key, max_age)
-                elif matches:
-                    await create_cache(response_body[0].decode(), key, max_age)
-            return response
-
-        else:
-            # If the response is cached, return it directly
+        if res:
             headers = {"Cache-Control": f"max-age:{stored_cache[1]}"}
             return StreamingResponse(iter([stored_cache[0]]), media_type="application/json", headers=headers)
+        response: Response = await call_next(request)
+        response_body = [chunk async for chunk in response.body_iterator]
+        response.body_iterator = iterate_in_threadpool(iter(response_body))
+        if response.status_code == 200:
+            if cache_control == 'no-store':
+                return response
+            if cache_control:
+                max_age_match = re.search(r'max-age=(\d+)', cache_control)
+                if max_age_match:
+                    max_age = int(max_age_match.group(1))
+                    if max_age:
+                        await create_cache(response_body[0].decode(), key, max_age)
+            elif matches:
+                await create_cache(response_body[0].decode(), key, max_age)
+            return response
+
