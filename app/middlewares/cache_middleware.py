@@ -45,9 +45,9 @@ class CacheMiddleware(BaseHTTPMiddleware):
             response.body_iterator = iterate_in_threadpool(iter(response_body))
 
             if response.status_code == 200:
-                if cache_control == 'no-store':
+                if cache_control and cache_control == 'no-store':
                     return response
-                if "max-age" in cache_control:
+                if cache_control and "max-age" in cache_control:
                     max_age = int(cache_control.split("=")[1])
                 await create_cache(response_body[0].decode(), key, max_age)
             return response
