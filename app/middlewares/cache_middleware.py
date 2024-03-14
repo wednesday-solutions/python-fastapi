@@ -41,12 +41,13 @@ class CacheMiddleware(BaseHTTPMiddleware):
         if request_type != "GET":
             return await call_next(request)
 
-        stored_cache = await retrieve_cache(key)
+        stored_cache, expire = await retrieve_cache(key)
         res = stored_cache and cache_control != "no-cache"
 
         if res:
-            headers = {"Cache-Control": f"max-age:{stored_cache[1]}"}
-            return StreamingResponse(iter([stored_cache[0]]), media_type="application/json", headers=headers)
+            headers = {"Cache-Control": f"max-age:{expire}"}
+            return StreamingResponse(iter([stored_cache]), media_type="application/json", headers=headers)
+
         response: Response = await call_next(request)
         response_body = [chunk async for chunk in response.body_iterator]
         response.body_iterator = iterate_in_threadpool(iter(response_body))
