@@ -1,40 +1,50 @@
 name: FastAPI-CI
-
-on:
+'on':
   push:
     branches:
       - main
   pull_request:
-    types: [opened, synchronize, reopened]
+    types:
+      - opened
+      - synchronize
+      - reopened
     branches:
       - main
-
 jobs:
   test:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v3
-
-    - uses: actions/setup-python@v4
-      with:
-        python-version: 3.11.8
-
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-
-    - name: Install plugin
-      run: pip install pytest-github-actions-annotate-failures
-
-    - name: Build coverage file
-      run: |
-        pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered --cov=app app/tests/ | tee pytest-coverage.txt
-
-    - name: Pytest coverage comment
-      uses: MishaKav/pytest-coverage-comment@main
-      with:
-            pytest-coverage-path: ./pytest-coverage.txt
-            junitxml-path: ./pytest.xml
-    
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.11.8
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Install plugin
+        run: pip install pytest-github-actions-annotate-failures
+      - name: Build coverage file
+        run: >
+          pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered
+          --cov=app app/tests/ | tee pytest-coverage.txt
+      - name: Pytest coverage comment
+        uses: MishaKav/pytest-coverage-comment@main
+        with:
+          pytest-coverage-path: ./pytest-coverage.txt
+          junitxml-path: ./pytest.xml
+      - name: SonarQube Scan
+        uses: sonarsource/sonarqube-scan-action@master
+        with:
+          args: |
+            -Dsonar.scm.revision=${{ github.event.pull_request.head.sha }}
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+          SONAR_TOKEN: '${{ secrets.SONAR_TOKEN }}'
+          SONAR_HOST_URL: '${{ secrets.SONAR_HOST_URL }}'
+      - uses: sonarsource/sonarqube-quality-gate-action@master
+        timeout-minutes: 5
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+          SONAR_TOKEN: '${{ secrets.SONAR_TOKEN }}'
+          SONAR_HOST_URL: '${{ secrets.SONAR_HOST_URL }}'
