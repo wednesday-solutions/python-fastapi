@@ -1,27 +1,37 @@
+from __future__ import annotations
+
 import json
 
 from fastapi import HTTPException
-from sqlalchemy.orm import Session
-from app.constants import jwt_utils
-from app.constants.messages.users import user_messages as messages
-from app.models import User
-from app.schemas.users.users_request import CreateUser, Login
-from werkzeug.security import check_password_hash
 from fastapi_pagination.ext.sqlalchemy import paginate
 from sqlalchemy import select
-from app.utils.user_utils import check_existing_field, responseFormatter
-from app.wrappers.cache_wrappers import create_cache, retrieve_cache
+from sqlalchemy.orm import Session
+from werkzeug.security import check_password_hash
+
+from app.constants import jwt_utils
+from app.constants.messages.users import user_messages as messages
+from app.exceptions import EmailAlreadyExistException
+from app.exceptions import InvalidCredentialsException
+from app.exceptions import MobileAlreadyExistException
+from app.exceptions import NoUserFoundException
+from app.models import User
+from app.schemas.users.users_request import CreateUser
+from app.schemas.users.users_request import Login
+from app.utils.user_utils import check_existing_field
+from app.utils.user_utils import response_formatter
+from app.wrappers.cache_wrappers import create_cache
+from app.wrappers.cache_wrappers import retrieve_cache
 
 
-async def get_user(user_id: int, dbSession: Session):
+async def get_user(user_id: int, db_session: Session):
     try:
         cache_key = f"user_{user_id}"
-        cached_user, expire = await retrieve_cache(cache_key)
+        cached_user, _ = await retrieve_cache(cache_key)
         if cached_user:
             return json.loads(cached_user)
         # Check if the user already exists in the database
         user = (
-            dbSession.query(User)
+            db_session.query(User)
             .where(User.id == user_id)
             .with_entities(
                 User.id,
@@ -35,7 +45,7 @@ async def get_user(user_id: int, dbSession: Session):
             .first()
         )
         if not user:
-            raise Exception(messages["NO_USER_FOUND_FOR_ID"])
+            raise NoUserFoundException(messages['NO_USER_FOUND_FOR_ID'])
 
         await create_cache(json.dumps(user._asdict(), default=str), cache_key, 60)
         return user
@@ -45,12 +55,12 @@ async def get_user(user_id: int, dbSession: Session):
         raise HTTPException(status_code=400, detail=f"{str(e)}")
 
 
-def list_users(dbSession: Session):
+def list_users(db_session: Session):
     try:
         query = select(User.id, User.name, User.email, User.mobile).order_by(User.created_at)
 
         # Pass the Select object to the paginate function
-        users = paginate(dbSession, query=query)
+        users = paginate(db_session, query=query)
 
         return users
 
@@ -60,39 +70,44 @@ def list_users(dbSession: Session):
         raise HTTPException(status_code=400, detail=f"{str(e)}")
 
 
-def create_user(data: CreateUser, dbSession: Session):
+def create_user(data: CreateUser, db_session: Session):
     try:
         user_data = data.dict()
         # Check if the email already exists in the db
-        email_exists = check_existing_field(dbSession=dbSession, model=User, field="email", value=user_data["email"])
+        email_exists = check_existing_field(db_session=db_session, model=User, field="email", value=user_data["email"])
         if email_exists:
-            raise Exception(messages["EMAIL_ALREADY_EXIST"])
+            raise EmailAlreadyExistException(messages['EMAIL_ALREADY_EXIST'])
 
         # Check if the mobile already exists in the db
-        mobile_exists = check_existing_field(dbSession=dbSession, model=User, field="mobile", value=user_data["mobile"])
+        mobile_exists = check_existing_field(
+            db_session=db_session,
+            model=User,
+            field="mobile",
+            value=user_data["mobile"],
+        )
         if mobile_exists:
-            raise Exception(messages["MOBILE_ALREADY_EXIST"])
+            raise MobileAlreadyExistException(messages['MOBILE_ALREADY_EXIST'])
 
         user = User(**user_data)
 
-        dbSession.add(user)
-        dbSession.commit()
-        dbSession.refresh(user)
+        db_session.add(user)
+        db_session.commit()
+        db_session.refresh(user)
 
-        return responseFormatter(messages["CREATED_SUCCESSFULLY"])
+        return response_formatter(messages["CREATED_SUCCESSFULLY"])
 
     except Exception as e:
         # Return a user-friendly error message to the client
         raise HTTPException(status_code=400, detail=f"{str(e)}")
 
 
-def login(data: Login, dbSession: Session):
+def login(data: Login, db_session: Session):
     try:
         user_data = data.dict()
 
         # Check if the course already exists in the db
         user_details = (
-            dbSession.query(User)
+            db_session.query(User)
             .where(
                 User.email == user_data["email"],
             )
@@ -100,14 +115,14 @@ def login(data: Login, dbSession: Session):
         )
 
         if not user_details:
-            raise Exception(messages["INVALID_CREDENTIALS"])
+            raise InvalidCredentialsException(messages['INVALID_CREDENTIALS'])
 
         if not check_password_hash(user_details.password, user_data["password"]):
-            raise Exception(messages["INVALID_CREDENTIALS"])
+            raise InvalidCredentialsException(messages['INVALID_CREDENTIALS'])
 
         del user_details.password
         token = jwt_utils.create_access_token({"sub": user_details.email, "id": user_details.id})
-        return responseFormatter(messages["LOGIN_SUCCESSFULLY"], {"token": token})
+        return response_formatter(messages["LOGIN_SUCCESSFULLY"], {"token": token})
 
     except Exception as e:
         print(e)

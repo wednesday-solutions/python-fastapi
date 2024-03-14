@@ -1,9 +1,11 @@
+from __future__ import annotations
+
 import contextvars
 import uuid
 
+from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
-from fastapi.responses import JSONResponse
 
 request_id_contextvar = contextvars.ContextVar("request_id", default=None)
 
@@ -11,7 +13,7 @@ request_id_contextvar = contextvars.ContextVar("request_id", default=None)
 class RequestIdInjection(BaseHTTPMiddleware):
     def dispatch(self, request: Request, call_next):
         request_id = str(uuid.uuid4())
-        request_id_contextvar.set(request_id)
+        request_id_contextvar.set(request_id)  # noqa
         try:
             return call_next(request)
 

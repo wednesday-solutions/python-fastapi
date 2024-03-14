@@ -15,9 +15,9 @@ from app.wrappers.cache_wrappers import retrieve_cache
 
 class CacheMiddleware(BaseHTTPMiddleware):
     def __init__(
-        self,
-        app,
-        cached_endpoints: list[str],
+            self,
+            app,
+            cached_endpoints: list[str],
     ):
         super().__init__(app)
         self.cached_endpoints = cached_endpoints
@@ -27,6 +27,10 @@ class CacheMiddleware(BaseHTTPMiddleware):
             if end_point in path_url:
                 return True
         return False
+
+    async def handle_max_age(self, max_age, response_body, key):
+        if max_age:
+            await create_cache(response_body[0].decode(), key, max_age)
 
     async def dispatch(self, request: Request, call_next) -> Response:
         path_url = request.url.path
@@ -41,12 +45,13 @@ class CacheMiddleware(BaseHTTPMiddleware):
         if request_type != "GET":
             return await call_next(request)
 
-        stored_cache = await retrieve_cache(key)
+        stored_cache, expire = await retrieve_cache(key)
         res = stored_cache and cache_control != "no-cache"
 
         if res:
-            headers = {"Cache-Control": f"max-age:{stored_cache[1]}"}
-            return StreamingResponse(iter([stored_cache[0]]), media_type="application/json", headers=headers)
+            headers = {"Cache-Control": f"max-age:{expire}"}
+            return StreamingResponse(iter([stored_cache]), media_type="application/json", headers=headers)
+
         response: Response = await call_next(request)
         response_body = [chunk async for chunk in response.body_iterator]
         response.body_iterator = iterate_in_threadpool(iter(response_body))
@@ -57,8 +62,7 @@ class CacheMiddleware(BaseHTTPMiddleware):
                 max_age_match = re.search(r"max-age=(\d+)", cache_control)
                 if max_age_match:
                     max_age = int(max_age_match.group(1))
-                    if max_age:
-                        await create_cache(response_body[0].decode(), key, max_age)
+                    await self.handle_max_age(max_age, response_body, key)
             elif matches:
                 await create_cache(response_body[0].decode(), key, max_age)
         return response

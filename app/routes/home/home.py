@@ -1,10 +1,15 @@
-from dependencies import circuit_breaker
-from fastapi import APIRouter, HTTPException
+from __future__ import annotations
+
+from fastapi import APIRouter
+from fastapi import HTTPException
 from fastapi.responses import JSONResponse
-from app.config.base import settings
-from app.middlewares.request_id_injection import request_id_contextvar
-from app.daos.home import external_service_call
 from pybreaker import CircuitBreakerError
+
+from app.config.base import settings
+from app.daos.home import external_service_call
+from app.exceptions import CentryTestException
+from app.middlewares.request_id_injection import request_id_contextvar
+from dependencies import circuit_breaker
 
 home_router = APIRouter()
 
@@ -32,7 +37,7 @@ async def external_service_endpoint():
 def sentry_endpoint():
     if not settings.SENTRY_DSN:
         raise HTTPException(status_code=503, detail="Sentry DSN not found")
-    raise Exception("Testing Sentry")
+    raise CentryTestException("Centry Test")
 
 
 @home_router.get("/{path:path}", include_in_schema=False)

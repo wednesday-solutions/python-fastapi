@@ -1,8 +1,11 @@
+from __future__ import annotations
+
 from app.config.base import settings
 from app.config.redis_config import get_redis_pool
+from app.exceptions import RedisUrlNotFoundException
 
 if not settings.REDIS_URL:
-    raise Exception("Please add REDIS_URL in environment")
+    raise RedisUrlNotFoundException("Failed To get Redis URL")
 
 
 async def create_cache(resp, key: str, ex: int = 60):
