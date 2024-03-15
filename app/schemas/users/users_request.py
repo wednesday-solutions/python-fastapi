@@ -51,7 +51,7 @@ class CreateUser(BaseModel):
                 "name": "Anas Nadeem",
                 "email": "anas@gmail.com",
                 "mobile": "1234567890",
-                "password": "Test@123",
+                "password": "Test@123", #NOSONAR
             }
         }
 
@@ -67,4 +67,4 @@ class Login(BaseModel):
         return email
 
     class Config:
-        schema_extra = {"example": {"email": "anas@gmail.com", "password": "Test@123"}}
+        schema_extra = {"example": {"email": "anas@gmail.com", "password": "Test@123"}} #NOSONAR

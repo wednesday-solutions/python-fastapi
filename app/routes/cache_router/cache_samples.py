@@ -11,5 +11,5 @@ httpBearerScheme = HTTPBearer()
 @cache_sample_router.get("/get-cache", tags=["Cache-Sample"])
 def get_cache():
     print("Request ID:", request_id_contextvar.get())
-    response = random.randint(100, 1000)
+    response = random.randint(100, 1000) #NOSONAR
     return {"random value is": response}

@@ -1,14 +1,18 @@
+from __future__ import annotations
+
+from fastapi import HTTPException
+from fastapi import Request
 from sqlalchemy.orm import Session
-from fastapi import Request, HTTPException
+
 from app.constants import jwt_utils
 
 
-def responseFormatter(message, data=None):
+def response_formatter(message, data=None):
     return {"success": True, "message": message, "data": data}
 
 
-def check_existing_field(dbSession: Session, model, field, value):
-    existing = dbSession.query(model).filter(getattr(model, field) == value).first()
+def check_existing_field(db_session: Session, model, field, value):
+    existing = db_session.query(model).filter(getattr(model, field) == value).first()
 
     if existing:
         return True
@@ -21,7 +25,7 @@ async def get_current_user(request: Request):
         raise HTTPException(status_code=401, detail="Token not provided")
 
     try:
-        user_id = int(dict(request).get("path_params")["user_id"])
+        user_id = int(dict(request).get("path_params")["user_id"])  # type: ignore
         token = token.split(" ")[1]
         payload = jwt_utils.decode_access_token(token)
         if user_id == int(payload["id"]):
