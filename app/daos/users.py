@@ -125,7 +125,6 @@ def login(data: Login, db_session: Session):
         if not check_password_hash(user_details.password, user_data["password"]):
             raise InvalidCredentialsException(messages["INVALID_CREDENTIALS"])
 
-        del user_details.password
         token = jwt_utils.create_access_token({"sub": user_details.email, "id": user_details.id})
         return response_formatter(messages["LOGIN_SUCCESSFULLY"], {"token": token})
 
