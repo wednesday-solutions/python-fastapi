@@ -1,8 +1,10 @@
+from __future__ import annotations
+
 import json
 import os
 import sys
+from collections.abc import Generator
 
-from app.config.base import db_settings
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy import MetaData
@@ -10,6 +12,9 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
+
+from app.config.base import db_settings
+from app.exceptions import DatabaseConnectionException
 
 load_dotenv()
 
@@ -49,6 +54,8 @@ else:
 meta = MetaData()
 
 # Test the connection and print the status
+
+
 try:
     conn = engine.connect()
     print("-------------------------- Database connected ----------------------------")
@@ -56,16 +63,16 @@ try:
     print("\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
 except Exception as e:
     print(f"Failed to connect to database. Error: {e}")
-    raise Exception(f"Failed to connect to database. Error: {e}")
+    raise DatabaseConnectionException("Failed to connect to database")
 
 localSession = Session(engine)
 
 
-def create_local_session() -> Session:
+def create_local_session() -> Generator[Session, None, None]:
     """Factory function that returns a new session object"""
     engine = create_engine(f"mysql+pymysql://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DBNAME}")
-    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-    db = SessionLocal()
+    session_local = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    db = session_local()
     try:
         yield db
     finally:

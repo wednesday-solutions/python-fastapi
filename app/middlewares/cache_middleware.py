@@ -15,9 +15,9 @@ from app.wrappers.cache_wrappers import retrieve_cache
 
 class CacheMiddleware(BaseHTTPMiddleware):
     def __init__(
-        self,
-        app,
-        cached_endpoints: list[str],
+            self,
+            app,
+            cached_endpoints: list[str],
     ):
         super().__init__(app)
         self.cached_endpoints = cached_endpoints
@@ -27,6 +27,10 @@ class CacheMiddleware(BaseHTTPMiddleware):
             if end_point in path_url:
                 return True
         return False
+
+    async def handle_max_age(self, max_age, response_body, key):
+        if max_age:
+            await create_cache(response_body[0].decode(), key, max_age)
 
     async def dispatch(self, request: Request, call_next) -> Response:
         path_url = request.url.path
@@ -58,8 +62,7 @@ class CacheMiddleware(BaseHTTPMiddleware):
                 max_age_match = re.search(r"max-age=(\d+)", cache_control)
                 if max_age_match:
                     max_age = int(max_age_match.group(1))
-                    if max_age:
-                        await create_cache(response_body[0].decode(), key, max_age)
+                    await self.handle_max_age(max_age, response_body, key)
             elif matches:
                 await create_cache(response_body[0].decode(), key, max_age)
         return response

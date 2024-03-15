@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from fastapi.testclient import TestClient
 
 from app.app import app
@@ -12,7 +14,9 @@ def test_read_main():
 
 
 def test_example():
-    assert 1 == 1
+    test_value1 = 1
+    test_value2 = 1
+    assert test_value1 == test_value2
 
 
 #

@@ -1,9 +1,12 @@
-from sqlalchemy import Column, event
+from __future__ import annotations
+
+from sqlalchemy import Column
+from sqlalchemy import event
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql import func
 from sqlalchemy.sql.sqltypes import DateTime
 from sqlalchemy.sql.sqltypes import Integer
 from sqlalchemy.sql.sqltypes import String
-from sqlalchemy.ext.declarative import declarative_base
 from werkzeug.security import generate_password_hash
 
 from app.sessions.db import engine
@@ -11,7 +14,7 @@ from app.sessions.db import engine
 Base = declarative_base()
 
 
-class User(Base):
+class User(Base):  # noqa
     __tablename__ = "user"
 
     id = Column(Integer, primary_key=True, index=True)

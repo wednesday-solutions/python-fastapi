@@ -26,7 +26,7 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
             pipe.expire(client_ip, TIME_WINDOW)
             await pipe.execute()
         finally:
-            pass
+            print("Finally Block in Rate Limit exceeded")
 
         response = await call_next(request)
         return response
