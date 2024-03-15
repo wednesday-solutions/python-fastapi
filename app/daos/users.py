@@ -48,8 +48,7 @@ async def get_user(user_id: int, db_session: Session):
             raise NoUserFoundException(messages["NO_USER_FOUND_FOR_ID"])
 
         await create_cache(json.dumps(user._asdict(), default=str), cache_key, 60)
-        return user
-
+        return user._asdict()
     except Exception as e:
         # Return a user-friendly error message to the client
         raise HTTPException(status_code=400, detail=f"{str(e)}")
