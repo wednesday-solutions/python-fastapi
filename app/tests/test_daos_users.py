@@ -4,7 +4,7 @@ from collections import namedtuple
 from datetime import datetime
 import json
 import unittest
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 from fastapi import HTTPException
 import pytest
@@ -134,5 +134,32 @@ class TestListUsers(unittest.TestCase):
         # Assertions
         self.assertEqual(cm.exception.status_code, 400)
 
+class TestGetUser(unittest.IsolatedAsyncioTestCase):
+    @patch('app.daos.users.retrieve_cache')
+    async def test_get_user_no_cache_no_user_found(self, mock_retrieve_cache):
+        # Mocking retrieve_cache to return no cached user
+        mock_retrieve_cache.return_value = None, None
+
+        # Mocking the database session and query result
+        mock_session = AlchemyMagicMock()
+        mock_query = MagicMock()
+        mock_query.where.return_value = mock_query
+        mock_query.with_entities.return_value = mock_query
+        mock_query.first.return_value = None  # Simulate no user found in the database
+
+        mock_session.query.return_value = mock_query
+
+        # Call the function and expect an exception
+        with self.assertRaises(HTTPException) as cm:
+            await get_user(0, mock_session)
+        # Assertions
+        mock_retrieve_cache.assert_called_once_with('user_0')
+        mock_query.where.assert_called_once()
+        self.assertEqual(cm.exception.status_code, 400)
+        self.assertEqual(str(cm.exception.detail), "No User found for given ID.")
+
+    # Write similar tests for other scenarios (e.g., cache hit, database query exception, cache creation exception)
+
 if __name__ == '__main__':
     unittest.main()
+
