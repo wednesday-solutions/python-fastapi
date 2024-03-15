@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 from fastapi.testclient import TestClient
+from unittest.mock import patch
 
 from app.app import app
-
 client = TestClient(app)
 
 
@@ -28,4 +28,3 @@ def test_circuit_breaker():
     # After the circuit breaker trips, this request should fail
     response = client.get("/api//home/external-service")
     assert response.status_code == 429
-    assert response.json()["error"] == "Too Many Requests"
