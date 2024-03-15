@@ -25,7 +25,7 @@ async def get_current_user(request: Request):
         raise HTTPException(status_code=401, detail="Token not provided")
 
     try:
-        user_id = int(dict(request).get("path_params")["user_id"])  # noqa
+        user_id = int(dict(request).get("path_params")["user_id"])  # type: ignore
         token = token.split(" ")[1]
         payload = jwt_utils.decode_access_token(token)
         if user_id == int(payload["id"]):
