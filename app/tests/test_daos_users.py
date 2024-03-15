@@ -6,9 +6,12 @@ from unittest.mock import patch
 
 import pytest
 from alchemy_mock.mocking import AlchemyMagicMock
+from alchemy_mock.mocking import UnifiedAlchemyMagicMock
 from freezegun import freeze_time
 
-from ..daos.users import get_user
+from app.daos.users import create_user
+from app.daos.users import get_user
+from app.schemas.users.users_request import CreateUser
 
 
 @pytest.fixture
@@ -48,8 +51,32 @@ async def test_get_user(self, mock_create_cache):
 
     # Call the function you want to test
     result = await get_user(1, mock_db_session)
+
     # Assert the result
-    assert result["id"] == user.id
-    assert result["name"] == user.name
-    assert result["email"] == user.email
-    assert result["mobile"] == user.mobile
+    assert result == user
+
+
+# Mock data
+create_user_data = CreateUser(
+    name="Test User",
+    email="test@gmail.com",
+    mobile="1234567890",
+    password="Test@123",
+)
+
+
+# Mocking the database session
+@pytest.fixture
+def db_session():
+    return UnifiedAlchemyMagicMock()
+
+
+# Test if user is created successfully
+def test_create_user(db_session):
+    response = create_user(create_user_data, db_session)
+    expected_response = {
+        "success": True,
+        "message": "User registered successfully.",
+        "data": None,
+    }
+    assert response == expected_response
