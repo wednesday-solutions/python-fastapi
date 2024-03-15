@@ -45,11 +45,10 @@ async def get_user(user_id: int, db_session: Session):
             .first()
         )
         if not user:
-            raise NoUserFoundException(messages['NO_USER_FOUND_FOR_ID'])
+            raise NoUserFoundException(messages["NO_USER_FOUND_FOR_ID"])
 
         await create_cache(json.dumps(user._asdict(), default=str), cache_key, 60)
-        return user
-
+        return user._asdict()
     except Exception as e:
         # Return a user-friendly error message to the client
         raise HTTPException(status_code=400, detail=f"{str(e)}")
@@ -74,9 +73,15 @@ def create_user(data: CreateUser, db_session: Session):
     try:
         user_data = data.dict()
         # Check if the email already exists in the db
-        email_exists = check_existing_field(db_session=db_session, model=User, field="email", value=user_data["email"])
+        email_exists = check_existing_field(
+            db_session=db_session,
+            model=User,
+            field="email",
+            value=user_data["email"],
+        )
         if email_exists:
-            raise EmailAlreadyExistException(messages['EMAIL_ALREADY_EXIST'])
+            print("Email already exists", email_exists)
+            raise EmailAlreadyExistException(messages["EMAIL_ALREADY_EXIST"])
 
         # Check if the mobile already exists in the db
         mobile_exists = check_existing_field(
@@ -86,7 +91,7 @@ def create_user(data: CreateUser, db_session: Session):
             value=user_data["mobile"],
         )
         if mobile_exists:
-            raise MobileAlreadyExistException(messages['MOBILE_ALREADY_EXIST'])
+            raise MobileAlreadyExistException(messages["MOBILE_ALREADY_EXIST"])
 
         user = User(**user_data)
 
@@ -115,12 +120,11 @@ def login(data: Login, db_session: Session):
         )
 
         if not user_details:
-            raise InvalidCredentialsException(messages['INVALID_CREDENTIALS'])
+            raise InvalidCredentialsException(messages["INVALID_CREDENTIALS"])
 
         if not check_password_hash(user_details.password, user_data["password"]):
-            raise InvalidCredentialsException(messages['INVALID_CREDENTIALS'])
+            raise InvalidCredentialsException(messages["INVALID_CREDENTIALS"])
 
-        del user_details.password
         token = jwt_utils.create_access_token({"sub": user_details.email, "id": user_details.id})
         return response_formatter(messages["LOGIN_SUCCESSFULLY"], {"token": token})
 

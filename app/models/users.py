@@ -14,7 +14,7 @@ from app.sessions.db import engine
 Base = declarative_base()
 
 
-class User(Base):  # noqa
+class User(Base):  # type: ignore
     __tablename__ = "user"
 
     id = Column(Integer, primary_key=True, index=True)
