@@ -8,16 +8,26 @@ This repository provides a template for creating and deploying a FastAPI project
 
 ## Getting Started
 
+### Requirements:
+- Python 3.11
+- Docker
+- redis
+- mysql
+
 ### 1. Initialize Local Environment
 
-To set up your local environment, run the following script:
+- To set up your local environment, run the following script:
 
 ```
 ./scripts/initialize-env.sh
 ```
 
 This script installs the necessary dependencies and prepares the environment for running the FastAPI application on your local machine.
-
+- Create a .env.local file with reference of .env.example
+  Run following command to inject env file
+  ```shell
+  set -a source .env.local set +a
+  ```
 ### 2. Run the Project
 Start the project locally with the following command:
 
@@ -59,7 +69,7 @@ If you are new to AWS Copilot or you want to learn more about AWS Copilot, pleas
 ```
 docker run --name recorder-redis -p 6379:6379 -d redis:alpine
 ```
-or add the REDIS_URL in .env file
+or add the REDIS_URL in .env.local file
 
 ### 6. Circuit breakers
 
@@ -86,3 +96,24 @@ async def external_service_endpoint():
     except CircuitBreakerError:
         raise HTTPException(status_code=503, detail="Service temporarily unavailable")
 ```
+
+### Celery Dependencies
+- Run following command to initiallize the celery worker
+```shell
+celery -A app.app.celery worker -l info
+```
+- Turn Up Celery Flower with
+  ```shell
+  flower --broker=${REDIS_URL}/6 --port=5555
+  ```
+
+### Running Application into Docker Container
+
+- Create a file .env.docker with reference of .env.example
+- Inject Docker environment using
+  ```shell
+  set -a source .env.docker set +a
+- use following command to turn on the application
+  ```shell
+  docker compose --env-file .env.docker up
+  ```
