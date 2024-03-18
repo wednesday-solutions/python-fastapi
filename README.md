@@ -99,9 +99,9 @@ async def external_service_endpoint():
 
 ### Celery Dependencies
 - Run following command to initiallize the celery worker
-```shell
-celery -A app.app.celery worker -l info
-```
+  ```shell
+    celery -A app.app.celery worker -l info
+  ```
 - Turn Up Celery Flower with
   ```shell
   flower --broker=${REDIS_URL}/6 --port=5555
