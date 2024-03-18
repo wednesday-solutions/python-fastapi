@@ -7,28 +7,23 @@ echo "Initializing local python environment"
 # Initialize python environment
 python -m venv venv
 
-echo 
+echo
 echo "Activating local python environment"
 # Activate python environment
 source ./venv/bin/activate
-echo 
+echo
 echo "Local python environment activated"
 
-echo 
+echo
 echo "Upgrading pip"
-echo 
+echo
 # Upgrade pip
 pip install --upgrade pip
-echo 
+echo
 echo "pip upgraded"
 
-echo 
+echo
 echo "Installing project dependencies"
-echo 
+echo
 # Install requirements/dependencies
 pip install -r requirements.txt --no-cache-dir
-
-pip uninstall httpcore -y
-pip uninstall httpx -y
-pip install httpcore
-pip install httpx
