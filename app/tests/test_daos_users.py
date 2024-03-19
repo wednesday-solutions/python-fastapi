@@ -25,17 +25,17 @@ from app.schemas.users.users_request import Login
 
 @pytest.fixture
 def mock_create_cache():
-    with patch("app.wrappers.cache_wrappers.create_cache") as mock_create_cache:
+    with patch("app.wrappers.cache_wrappers.CacheUtils.create_cache") as mock_create_cache:
         yield mock_create_cache
 
 
 @pytest.fixture
 def mock_retrieve_cache():
-    with patch("app.wrappers.cache_wrappers.retrieve_cache") as mock_retrieve_cache:
+    with patch("app.wrappers.cache_wrappers.CacheUtils.retrieve_cache") as mock_retrieve_cache:
         yield mock_retrieve_cache
 
 
-@patch("app.wrappers.cache_wrappers.create_cache")
+@patch("app.wrappers.cache_wrappers.CacheUtils.create_cache")
 @pytest.mark.asyncio
 @freeze_time(datetime(2024, 3, 15, 17, 20, 37, 495390).strftime("%Y-%m-%d %H:%M:%S.%f"))
 async def test_get_user(self, mock_create_cache):
@@ -142,7 +142,7 @@ class TestListUsers(unittest.TestCase):
 
 
 class TestGetUser(unittest.IsolatedAsyncioTestCase):
-    @patch("app.daos.users.retrieve_cache")
+    @patch("app.wrappers.cache_wrappers.CacheUtils.retrieve_cache")
     async def test_get_user_no_cache_no_user_found(self, mock_retrieve_cache):
         # Mocking retrieve_cache to return no cached user
         mock_retrieve_cache.return_value = None, None

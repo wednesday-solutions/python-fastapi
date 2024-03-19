@@ -19,14 +19,13 @@ from app.schemas.users.users_request import CreateUser
 from app.schemas.users.users_request import Login
 from app.utils.user_utils import check_existing_field
 from app.utils.user_utils import response_formatter
-from app.wrappers.cache_wrappers import create_cache
-from app.wrappers.cache_wrappers import retrieve_cache
+from app.wrappers.cache_wrappers import CacheUtils
 
 
 async def get_user(user_id: int, db_session: Session):
     try:
         cache_key = f"user_{user_id}"
-        cached_user, _ = await retrieve_cache(cache_key)
+        cached_user, _ = await CacheUtils.retrieve_cache(cache_key)
         if cached_user:
             return json.loads(cached_user)
         # Check if the user already exists in the database
@@ -47,7 +46,7 @@ async def get_user(user_id: int, db_session: Session):
         if not user:
             raise NoUserFoundException(messages["NO_USER_FOUND_FOR_ID"])
 
-        await create_cache(json.dumps(user._asdict(), default=str), cache_key, 60)
+        await CacheUtils.create_cache(json.dumps(user._asdict(), default=str), cache_key, 60)
         return user._asdict()
     except Exception as e:
         # Return a user-friendly error message to the client
