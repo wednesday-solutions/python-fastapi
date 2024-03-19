@@ -13,17 +13,17 @@ from sqlalchemy.orm import Session
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
-from app.config.base import db_settings
+from app.config.base import settings
 from app.exceptions import DatabaseConnectionException
 
 load_dotenv()
 
 # Set the default values for connecting locally
-HOST = db_settings.DB_HOSTNAME
-PORT = db_settings.DB_PORT
-DBNAME = db_settings.DB_NAME
-USERNAME = db_settings.DB_USERNAME
-PASSWORD = db_settings.DB_PASSWORD
+HOST = settings.DB_HOSTNAME
+PORT = settings.DB_PORT
+DBNAME = settings.DB_NAME
+USERNAME = settings.DB_USERNAME
+PASSWORD = settings.DB_PASSWORD
 
 if "pytest" in sys.modules:
     SQLALCHEMY_DATABASE_URL = "sqlite://"

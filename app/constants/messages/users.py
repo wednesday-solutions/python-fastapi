@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 user_messages = {
     "CREATED_SUCCESSFULLY": "User registered successfully.",
     "EMAIL_ALREADY_EXIST": "Email already registered.",

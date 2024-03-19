@@ -1,14 +1,15 @@
-import asyncio
-import random
+from __future__ import annotations
+
 import unittest
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 from app.daos.home import external_service_call
 from app.exceptions import ExternalServiceException
 
+
 class TestExternalServiceCall(unittest.TestCase):
-    @patch('app.daos.home.random')
-    @patch('app.daos.home.asyncio.sleep')
+    @patch("app.daos.home.random")
+    @patch("app.daos.home.asyncio.sleep")
     async def test_external_service_call_success(self, mock_sleep, mock_random):
         # Mocking the random delay
         mock_random.uniform.return_value = 0.5  # Mocking a fixed delay for simplicity
@@ -20,8 +21,8 @@ class TestExternalServiceCall(unittest.TestCase):
         mock_sleep.assert_called_once_with(0.5)  # Check if sleep is called with the correct delay
         self.assertEqual(result, "Success from external service")
 
-    @patch('your_module.random')
-    @patch('your_module.asyncio.sleep')
+    @patch("app.daos.home.random")
+    @patch("app.daos.home.asyncio.sleep")
     async def test_external_service_call_failure(self, mock_sleep, mock_random):
         # Mocking the random delay
         mock_random.uniform.return_value = 0.5  # Mocking a fixed delay for simplicity
@@ -35,7 +36,6 @@ class TestExternalServiceCall(unittest.TestCase):
         # Assertions
         mock_sleep.assert_called_once_with(0.5)  # Check if sleep is called with the correct delay
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()
-
-

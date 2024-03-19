@@ -19,7 +19,7 @@ async def validation_exception_handler(exc: RequestValidationError):
     )
 
 
-async def http_exception_handler(request:Request, exc: HTTPException):
+async def http_exception_handler(request: Request, exc: HTTPException):
     print(request)
     return JSONResponse(status_code=exc.status_code, content={"success": False, "message": exc.detail})
 

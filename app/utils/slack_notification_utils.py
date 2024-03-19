@@ -1,7 +1,9 @@
-import os
-import requests
-import json
+from __future__ import annotations
 
+import json
+import os
+
+import requests
 from dotenv import load_dotenv
 from fastapi import HTTPException
 

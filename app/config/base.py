@@ -3,16 +3,6 @@ from __future__ import annotations
 from pydantic import BaseSettings
 
 
-class CelerySettings(BaseSettings):
-    RESULT_EXPIRES: int
-    RESULT_PERSISTENT: bool
-    WORKER_SEND_TASK_EVENT: bool
-    WORKER_PREFETCH_MULTIPLIER: int
-
-    class Config:
-        env_file = ".config.celery"
-
-
 class DBSettings(BaseSettings):
     DB_HOSTNAME: str
     DB_PORT: str
@@ -24,7 +14,15 @@ class DBSettings(BaseSettings):
         env_file = ".env"
 
 
-class Settings(BaseSettings):
+class FlagFeatureSettings(BaseSettings):
+    CACHE_ENABLED: bool
+    SENTRY_ENABLED: bool = False
+
+    class Config:
+        env_file = ".env"
+
+
+class Settings(FlagFeatureSettings, DBSettings):
     SECRET_KEY: str
     REDIS_URL: str
     SENTRY_DSN: str | None
@@ -40,7 +38,16 @@ class CachedEndpoints(BaseSettings):
     CACHED_ENDPOINTS: list = ["/cache-sample/"]
 
 
-db_settings = DBSettings()
+class CelerySettings(BaseSettings):
+    RESULT_EXPIRES: int
+    RESULT_PERSISTENT: bool
+    WORKER_SEND_TASK_EVENT: bool
+    WORKER_PREFETCH_MULTIPLIER: int
+
+    class Config:
+        env_file = ".config.celery"
+
+
 settings = Settings()
 celery_settings = CelerySettings()
 cached_endpoints = CachedEndpoints()

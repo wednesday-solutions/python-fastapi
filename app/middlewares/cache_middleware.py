@@ -9,15 +9,14 @@ from starlette.responses import Response
 from starlette.responses import StreamingResponse
 
 from app.config.base import settings
-from app.wrappers.cache_wrappers import create_cache
-from app.wrappers.cache_wrappers import retrieve_cache
+from app.wrappers.cache_wrappers import CacheUtils
 
 
 class CacheMiddleware(BaseHTTPMiddleware):
     def __init__(
-            self,
-            app,
-            cached_endpoints: list[str],
+        self,
+        app,
+        cached_endpoints: list[str],
     ):
         super().__init__(app)
         self.cached_endpoints = cached_endpoints
@@ -30,7 +29,7 @@ class CacheMiddleware(BaseHTTPMiddleware):
 
     async def handle_max_age(self, max_age, response_body, key):
         if max_age:
-            await create_cache(response_body[0].decode(), key, max_age)
+            await CacheUtils.create_cache(response_body[0].decode(), key, max_age)
 
     async def dispatch(self, request: Request, call_next) -> Response:
         path_url = request.url.path
@@ -45,7 +44,7 @@ class CacheMiddleware(BaseHTTPMiddleware):
         if request_type != "GET":
             return await call_next(request)
 
-        stored_cache, expire = await retrieve_cache(key)
+        stored_cache, expire = await CacheUtils.retrieve_cache(key)
         res = stored_cache and cache_control != "no-cache"
 
         if res:
@@ -64,5 +63,5 @@ class CacheMiddleware(BaseHTTPMiddleware):
                     max_age = int(max_age_match.group(1))
                     await self.handle_max_age(max_age, response_body, key)
             elif matches:
-                await create_cache(response_body[0].decode(), key, max_age)
+                await CacheUtils.create_cache(response_body[0].decode(), key, max_age)
         return response
