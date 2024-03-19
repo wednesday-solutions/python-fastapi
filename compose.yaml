@@ -18,6 +18,10 @@ services:
       retries: 3
     depends_on:
       - redis
+    volumes:
+      - db:/var/lib/mysql
+      - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+
     networks:
       - fast-api-network
 
@@ -75,7 +79,33 @@ services:
       - worker
     networks:
       - fast-api-network
+  pmm-server:
+    image: percona/pmm-server:latest
+    ports:
+      - "443:443"
+    volumes:
+      - pmm-data:/srv
+    environment:
+      SERVER_USER: admin
+      SERVER_PASSWORD: admin
+    networks:
+      - fast-api-network
+
+  pmm-client:
+    image: percona/pmm-client:latest
+    environment:
+      PMM_SERVER: pmm-server
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/host:ro
+    networks:
+      - fast-api-network
 
 networks:
   fast-api-network:
     driver: bridge
+
+volumes:
+  db:
+  pmm-data:
