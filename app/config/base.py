@@ -17,6 +17,7 @@ class DBSettings(BaseSettings):
 class FlagFeatureSettings(BaseSettings):
     CACHE_ENABLED: bool
     SENTRY_ENABLED: bool = False
+    SLACK_ENABLED: bool = False
 
     class Config:
         env_file = ".env"

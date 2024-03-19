@@ -1,13 +1,11 @@
 from __future__ import annotations
 
 import json
-import os
 
 import requests
-from dotenv import load_dotenv
 from fastapi import HTTPException
 
-load_dotenv()
+from app.config.base import settings
 
 
 def send_slack_message(payload):
@@ -18,7 +16,10 @@ def send_slack_message(payload):
     Returns:
         HTTP response code, i.e., <Response [503]>
     """
-    webhook_url = os.environ.get("SLACK_WEBHOOK_URL")  # Use get to avoid KeyError
+    if not settings.SLACK_ENABLEDs:
+        return
+
+    webhook_url = settings.SLACK_WEBHOOK_URL
 
     if not webhook_url:
         raise HTTPException(status_code=400, detail="Slack URL not configured.")
