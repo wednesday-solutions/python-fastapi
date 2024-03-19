@@ -29,7 +29,8 @@ RUN adduser \
 RUN --mount=type=cache,target=/root/.cache/pip \
     --mount=type=bind,source=requirements.txt,target=requirements.txt \
     python -m pip install -r requirements.txt
-
+#initiallizing opentelemetry to monitor app
+RUN opentelemetry-bootstrap --action=install
 # Switch to the non-privileged user to run the application.
 USER nonroot
 
@@ -40,4 +41,4 @@ COPY . .
 EXPOSE 8000
 
 # Run the application.
-CMD ["sh", "-c", "alembic upgrade head && uvicorn app.app:app --host 0.0.0.0 --port 8000"]
+CMD ["sh", "-c", "alembic upgrade head && opentelemetry-instrument uvicorn app.app:app --host 0.0.0.0 --port 8000"]
