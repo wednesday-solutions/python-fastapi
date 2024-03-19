@@ -1,8 +1,10 @@
+from __future__ import annotations
+
 import re
 
+from email_validator import validate_email
 from pydantic import BaseModel
 from pydantic import validator
-from email_validator import validate_email
 
 
 class CreateUser(BaseModel):
@@ -37,11 +39,12 @@ class CreateUser(BaseModel):
             or not any(char.islower() for char in password)
             or not any(char.isdigit() for char in password)
             or not re.search(
-                r'[!@#$%^&*(),.?":{}|<>]', password
+                r'[!@#$%^&*(),.?":{}|<>]',
+                password,
             )  # The regular expression [!@#$%^&*(),.?":{}|<>] matches any of these special characters.
         ):
             raise ValueError(
-                "Password must be strong: at least 8 characters, containing at least one uppercase letter, one lowercase letter, one digit, and one special character."
+                "Password must be strong: at least 8 characters, containing at least one uppercase letter, one lowercase letter, one digit, and one special character.",
             )
         return password
 
@@ -51,8 +54,8 @@ class CreateUser(BaseModel):
                 "name": "Anas Nadeem",
                 "email": "anas@gmail.com",
                 "mobile": "1234567890",
-                "password": "Test@123", #NOSONAR
-            }
+                "password": "Test@123",  # NOSONAR
+            },
         }
 
 
@@ -67,4 +70,4 @@ class Login(BaseModel):
         return email
 
     class Config:
-        schema_extra = {"example": {"email": "anas@gmail.com", "password": "Test@123"}} #NOSONAR
+        schema_extra = {"example": {"email": "anas@gmail.com", "password": "Test@123"}}  # NOSONAR

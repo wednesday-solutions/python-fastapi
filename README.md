@@ -25,6 +25,7 @@ This repository provides a template for creating and deploying a FastAPI project
 - Linting using flake8
 - Formatting using black
 - Code quality analysis using SonarQube
+- Feature flagging added - User can enabled/disabled
 
 ### Getting Started
 

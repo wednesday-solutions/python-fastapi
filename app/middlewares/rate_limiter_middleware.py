@@ -1,7 +1,10 @@
-from app.config.redis_config import get_redis_pool
+from __future__ import annotations
+
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
+
+from app.config.redis_config import get_redis_pool
 
 MAX_REQUESTS = 10
 TIME_WINDOW = 60
