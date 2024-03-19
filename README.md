@@ -175,3 +175,9 @@ To monitor your database using Percona, follow these steps:
    - Click add service.
 
 By following these steps, you'll successfully configure Percona to monitor your MySQL database.
+
+### Dashboard Links
+- Percona: https://localhost:443
+- flower: http://localhost:5556
+- server: http://localhost:8000
+- server-healthcheck: http://localhost:8000/home
