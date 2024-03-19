@@ -26,7 +26,7 @@ This repository provides a template for creating and deploying a FastAPI project
 - Formatting using black
 - Code quality analysis using SonarQube
 - Feature flagging added - User can enabled/disabled
-
+- Database Monitoring using percona
 ### Getting Started
 
 #### Requirements:
