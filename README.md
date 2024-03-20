@@ -240,10 +240,11 @@ By following these steps, you'll successfully configure Percona to monitor your 
 - Percona: https://localhost:443
 - flower: http://localhost:5556
 - server: http://localhost:8000
+- locust: http://localhost:8089
 - server-healthcheck: http://localhost:8000/home
 
 
 #### Useful scripts
 - Tests - scripts/run_tests.sh
 - Linting & Formatting - scripts/lint_and_format.sh
-- Load tests - scripts/load_tests.sh
+- Load tests - scripts/load_tests.sh (Change [locust.conf](https://docs.locust.io/en/stable/configuration.html) accordinly)
