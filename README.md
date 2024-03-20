@@ -6,6 +6,7 @@ This repository provides a template for creating and deploying a FastAPI project
 
 - [Features](#features)
 - [Getting started](#getting-started)
+- [Advanced Usage](#advanced-usage)
 
 ### Features
 
@@ -28,6 +29,8 @@ This repository provides a template for creating and deploying a FastAPI project
 - Application monitoring using Signoz
 - Feature flagging added - User can enabled/disabled
 - Database Monitoring using percona
+- Loadtests using locust
+
 ### Getting Started
 
 #### Requirements:
@@ -144,7 +147,9 @@ async def external_service_endpoint():
         raise HTTPException(status_code=503, detail="Service temporarily unavailable")
 ```
 
-# Using Signoz Monitoring Tool
+### Advanced Usage
+
+#### Using Signoz Monitoring Tool
 
 To utilize Signoz for monitoring your applications, follow these steps:
 
@@ -179,7 +184,7 @@ To utilize Signoz for monitoring your applications, follow these steps:
      OTEL_EXPORTER_OTLP_PROTOCOL=
      ```
 
-## Logging with Signoz
+#### Logging with Signoz
 
 To enable logging with Signoz, follow these steps:
 
@@ -196,7 +201,8 @@ To enable logging with Signoz, follow these steps:
    - Follow the instructions provided to configure log sending to Signoz.
 
 By following these steps, you can effectively set up application monitoring and logging using Signoz for your Python FastAPI applications.
-### Database Monitoring Using Percona
+
+#### Database Monitoring Using Percona
 
 To monitor your database using Percona, follow these steps:
 
@@ -230,8 +236,15 @@ To monitor your database using Percona, follow these steps:
 
 By following these steps, you'll successfully configure Percona to monitor your MySQL database.
 
-### Dashboard Links
+#### Dashboard Links
 - Percona: https://localhost:443
 - flower: http://localhost:5556
 - server: http://localhost:8000
+- locust: http://localhost:8089
 - server-healthcheck: http://localhost:8000/home
+
+
+#### Useful scripts
+- Tests - scripts/run_tests.sh
+- Linting & Formatting - scripts/lint_and_format.sh
+- Load tests - scripts/load_tests.sh (Change [locust.conf](https://docs.locust.io/en/stable/configuration.html) accordinly)

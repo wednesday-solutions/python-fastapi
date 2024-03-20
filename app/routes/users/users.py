@@ -12,7 +12,6 @@ from app.daos.users import create_user as create_user_dao
 from app.daos.users import get_user as get_user_dao
 from app.daos.users import list_users as list_users_dao
 from app.daos.users import login as signin
-from app.middlewares.request_id_injection import request_id_contextvar
 from app.schemas.users.users_request import CreateUser
 from app.schemas.users.users_request import Login
 from app.schemas.users.users_response import UserOutResponse

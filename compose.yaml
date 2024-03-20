@@ -101,7 +101,22 @@ services:
       - /:/host:ro
     networks:
       - fast-api-network
-
+  locust-master:
+    image: locustio/locust
+    ports:
+      - "8089:8089"  # Expose Locust's web interface on port 8089
+    volumes:
+      - ./loadtests:/mnt/locust  # Mount the loadtests directory into the container
+    command: -f /mnt/locust --master -H http://app:"${SERVER_PORT}"  # Start Locust in master mode, pointing to your FastAPI application
+    networks:
+      - fast-api-network
+  locust-worker:
+    image: locustio/locust
+    volumes:
+      - ./loadtests:/mnt/locust  # Mount the loadtests directory into the container
+    command: -f /mnt/locust --worker --master-host locust-master
+    networks:
+      - fast-api-network
 networks:
   fast-api-network:
     driver: bridge

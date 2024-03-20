@@ -6,7 +6,7 @@ from starlette.requests import Request
 
 from app.config.redis_config import get_redis_pool
 
-MAX_REQUESTS = 10
+MAX_REQUESTS = 10000
 TIME_WINDOW = 60
 
 
