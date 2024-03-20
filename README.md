@@ -6,6 +6,7 @@ This repository provides a template for creating and deploying a FastAPI project
 
 - [Features](#features)
 - [Getting started](#getting-started)
+- [Advanced Usage](#advanced-usage)
 
 ### Features
 
@@ -27,6 +28,8 @@ This repository provides a template for creating and deploying a FastAPI project
 - Code quality analysis using SonarQube
 - Feature flagging added - User can enabled/disabled
 - Database Monitoring using percona
+- Loadtests using locust
+
 ### Getting Started
 
 #### Requirements:
@@ -143,7 +146,9 @@ async def external_service_endpoint():
         raise HTTPException(status_code=503, detail="Service temporarily unavailable")
 ```
 
-### Database Monitoring Using Percona
+### Advanced Usage
+
+#### Database Monitoring Using Percona
 
 To monitor your database using Percona, follow these steps:
 
@@ -177,8 +182,14 @@ To monitor your database using Percona, follow these steps:
 
 By following these steps, you'll successfully configure Percona to monitor your MySQL database.
 
-### Dashboard Links
+#### Dashboard Links
 - Percona: https://localhost:443
 - flower: http://localhost:5556
 - server: http://localhost:8000
 - server-healthcheck: http://localhost:8000/home
+
+
+#### Useful scripts
+- Tests - scripts/run_tests.sh
+- Linting & Formatting - scripts/lint_and_format.sh
+- Load tests - scripts/load_tests.sh
