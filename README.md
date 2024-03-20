@@ -26,6 +26,7 @@ This repository provides a template for creating and deploying a FastAPI project
 - Linting using flake8
 - Formatting using black
 - Code quality analysis using SonarQube
+- Application monitoring using Signoz
 - Feature flagging added - User can enabled/disabled
 - Database Monitoring using percona
 - Loadtests using locust
@@ -147,6 +148,59 @@ async def external_service_endpoint():
 ```
 
 ### Advanced Usage
+
+#### Using Signoz Monitoring Tool
+
+To utilize Signoz for monitoring your applications, follow these steps:
+
+1. **Sign Up:**
+   - Go to the Signoz cloud portal [here](https://signoz.io/teams/).
+   - Sign up for an account.
+   - After signing up, you will receive a verification email from Signoz.
+
+2. **Verify Email:**
+   - Verify your email through the verification email sent by Signoz.
+
+3. **Application Monitoring Setup:**
+   - Once verified, log in to your Signoz account.
+   - Click on "Application Monitoring".
+
+4. **Configure Application:**
+   - Select Python as the language.
+   - Provide a service name.
+   - Choose FastAPI as the framework.
+
+5. **Setup Quickstart:**
+   - Select your OS and architecture.
+   - Choose Quickstart.
+6. **Install Dependencies:**
+   - Skip this step and move to next step
+7. **Configure Environment Variables:**
+   - In the next step, you need to update the values for the following variables in `.env.local` and `.env.docker` files:
+     ```shell
+     OTEL_RESOURCE_ATTRIBUTES=
+     OTEL_EXPORTER_OTLP_ENDPOINT=
+     OTEL_EXPORTER_OTLP_HEADERS=
+     OTEL_EXPORTER_OTLP_PROTOCOL=
+     ```
+
+#### Logging with Signoz
+
+To enable logging with Signoz, follow these steps:
+
+1. **Open Dashboard:**
+   - Log in to your Signoz dashboard.
+
+2. **Navigate to Logs Section:**
+   - Go to the logs section of your dashboard.
+
+3. **Configure Log Sending:**
+   - Click on "Sending Logs to Signoz".
+
+4. **Follow Instructions:**
+   - Follow the instructions provided to configure log sending to Signoz.
+
+By following these steps, you can effectively set up application monitoring and logging using Signoz for your Python FastAPI applications.
 
 #### Database Monitoring Using Percona
 

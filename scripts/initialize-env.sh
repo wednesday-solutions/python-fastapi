@@ -27,3 +27,4 @@ echo "Installing project dependencies"
 echo
 # Install requirements/dependencies
 pip install -r requirements.txt --no-cache-dir
+opentelemetry-bootstrap --action=install
