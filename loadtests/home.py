@@ -6,5 +6,5 @@ from locust import task
 
 class Home(HttpUser):
     @task
-    def hello_world(self):
+    def home_endpoint(self):
         self.client.get("/api/home/")
