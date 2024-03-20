@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from functools import lru_cache
 
 from app.config.base import settings
@@ -16,7 +18,7 @@ class BaseConfig:
     CELERY_TASK_ROUTES = (route_task,)
 
 
-@lru_cache()
+@lru_cache
 def get_settings():
     config_cls = BaseConfig
     return config_cls()

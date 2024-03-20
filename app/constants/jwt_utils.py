@@ -1,6 +1,10 @@
-from fastapi import HTTPException
-import jwt
+from __future__ import annotations
+
 import datetime
+
+import jwt
+from fastapi import HTTPException
+
 from app.config.base import settings
 
 

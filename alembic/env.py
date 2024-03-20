@@ -1,23 +1,25 @@
+from __future__ import annotations
+
 import json
 import os
 from logging.config import fileConfig
 
-from app.config.base import db_settings
 from dotenv import load_dotenv
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
-from alembic import context
+from alembic import context  # type: ignore
+from app.config.base import settings
 
 load_dotenv()
 
 print("==" * 50, "\n\n\n", "OS ENVIRONMENT", os.environ, "\n\n\n", "==" * 50)
 
-HOST = db_settings.DB_HOSTNAME
-PORT = db_settings.DB_PORT
-DBNAME = db_settings.DB_NAME
-USERNAME = db_settings.DB_USERNAME
-PASSWORD = db_settings.DB_PASSWORD
+HOST = settings.DB_HOSTNAME
+PORT = settings.DB_PORT
+DBNAME = settings.DB_NAME
+USERNAME = settings.DB_USERNAME
+PASSWORD = settings.DB_PASSWORD
 
 if "PYTHON_FASTAPI_TEMPLATE_CLUSTER_SECRET" in os.environ:
     print("Connecting to database on RDS..\n")

@@ -1,5 +1,8 @@
-from .base import settings
+from __future__ import annotations
+
 from redis import asyncio
+
+from .base import settings
 
 
 async def get_redis_pool():

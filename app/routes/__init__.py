@@ -1,9 +1,11 @@
+from __future__ import annotations
+
 from fastapi import APIRouter
 
+from .cache_router import cache_sample_router
+from .celery_router import celery_sample_router
 from .home import home_router
 from .users import user_router
-from .celery_router import celery_sample_router
-from .cache_router import cache_sample_router
 
 api_router = APIRouter()
 api_router.include_router(user_router, prefix="/user")

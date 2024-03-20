@@ -26,7 +26,8 @@ This repository provides a template for creating and deploying a FastAPI project
 - Formatting using black
 - Code quality analysis using SonarQube
 - Application monitoring using Signoz
-
+- Feature flagging added - User can enabled/disabled
+- Database Monitoring using percona
 ### Getting Started
 
 #### Requirements:
@@ -195,3 +196,42 @@ To enable logging with Signoz, follow these steps:
    - Follow the instructions provided to configure log sending to Signoz.
 
 By following these steps, you can effectively set up application monitoring and logging using Signoz for your Python FastAPI applications.
+### Database Monitoring Using Percona
+
+To monitor your database using Percona, follow these steps:
+
+1. **Run Application Inside Docker Container:**
+   - Ensure that your application is running inside a Docker container.
+
+2. **Open Dashboard:**
+   - Open your web browser and navigate to `https://localhost:443`.
+
+3. **Login:**
+   - Use the following credentials to log in:
+     ```shell
+     Username: admin
+     Password: admin
+     ```
+
+4. **Access Settings:**
+   - Once logged in, navigate to the settings section of the dashboard.
+
+5. **Add Service:**
+   - Within the settings, locate the "Add Service" option.
+
+6. **Select MySQL:**
+   - Choose MySQL as the service you want to monitor.
+
+7. **Provide Database Details:**
+   - Enter the hostname, username, password, and any other necessary environment variables required to connect to your MySQL database.
+
+8. **Finish Configuration:**
+   - Click add service.
+
+By following these steps, you'll successfully configure Percona to monitor your MySQL database.
+
+### Dashboard Links
+- Percona: https://localhost:443
+- flower: http://localhost:5556
+- server: http://localhost:8000
+- server-healthcheck: http://localhost:8000/home
