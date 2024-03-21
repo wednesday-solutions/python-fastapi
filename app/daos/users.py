@@ -24,6 +24,9 @@ from app.wrappers.cache_wrappers import CacheUtils
 
 async def get_user(user_id: int, db_session: Session):
     try:
+        if not user_id:
+            raise NoUserFoundException(messages["NO_USER_ID_PROVIDED"])
+
         cache_key = f"user_{user_id}"
         cached_user, _ = await CacheUtils.retrieve_cache(cache_key)
         if cached_user:
@@ -119,7 +122,7 @@ def login(data: Login, db_session: Session):
         )
 
         if not user_details:
-            raise InvalidCredentialsException(messages["INVALID_CREDENTIALS"])
+            raise InvalidCredentialsException(messages["NO_USERS_FOUND_IN_DB"])
 
         if not check_password_hash(user_details.password, user_data["password"]):
             raise InvalidCredentialsException(messages["INVALID_CREDENTIALS"])
