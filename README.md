@@ -27,14 +27,14 @@ This repository provides a template for creating and deploying a FastAPI project
 - Formatting using black
 - Code quality analysis using SonarQube
 - Application monitoring using Signoz
-- Feature flagging added - User can enabled/disabled
+- Feature flagging added - User can enable/disable features
 - Database Monitoring using percona
 - Loadtests using locust
 
 ### Getting Started
 
 #### Requirements:
-- Python 3.11
+- Python 3
 - Docker
 - mysql
 
@@ -238,10 +238,9 @@ By following these steps, you'll successfully configure Percona to monitor your 
 
 #### Dashboard Links
 - Percona: https://localhost:443
-- flower: http://localhost:5556
-- server: http://localhost:8000
-- locust: http://localhost:8089
-- server-healthcheck: http://localhost:8000/home
+- Flower: http://localhost:5556
+- Locust UI: http://localhost:8089
+- Swagger UI: http://localhost:8000
 
 
 #### Useful scripts

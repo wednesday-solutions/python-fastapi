@@ -4,6 +4,7 @@ from typing import Annotated
 
 from fastapi import APIRouter
 from fastapi import Depends
+from fastapi import Path
 from fastapi.security import HTTPBearer
 from fastapi_pagination import Page
 from sqlalchemy.orm import Session
@@ -38,7 +39,7 @@ def login(payload: Login, db: Session = Depends(create_local_session)):
 @user_router.get("/{user_id}", tags=["Users"], dependencies=[Depends(get_current_user)], response_model=UserOutResponse)
 async def profile(
     token: Annotated[str, Depends(httpBearerScheme)],
-    user_id,
+    user_id: int = Path(..., title="ID of the user"),
     db: Session = Depends(create_local_session),
 ):
     response = await get_user_dao(user_id, db_session=db)
