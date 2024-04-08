@@ -1,7 +1,3 @@
-echo "Enabling Pre Commit Hooks"
-pre-commit install
-echo
-
 echo "Initializing local python environment"
 python -m venv venv
 
@@ -26,5 +22,9 @@ pip install -r requirements.txt --no-cache-dir
 echo
 echo "Copying .env.example to .env.local"
 cp .env.example .env.local
+
+echo "Enabling Pre Commit Hooks"
+pre-commit install
+echo
 
 opentelemetry-bootstrap --action=install

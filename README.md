@@ -61,6 +61,15 @@ This repository provides a template for creating and deploying a FastAPI project
 
 This script installs the necessary dependencies and prepares the environment for running the FastAPI application on your machine.
 
+##### Activate the environment
+```
+# Mac & Linux:
+source ./venv/bin/activate
+
+# Windows
+.\venv\scripts\activate
+```
+
 #### 2. Variables Configuration
 Update database environment variables in your .env.local file:
 ```
