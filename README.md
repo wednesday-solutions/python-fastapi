@@ -69,12 +69,12 @@ DB_HOSTNAME=localhost
 DB_PORT=3306
 DB_USERNAME=
 DB_PASSWORD=
-DB_ROOT_PASSWORD=
 ```
 Additional Configuration (Optional):
 ```
 SENTRY_DSN=
 SLACK_WEBHOOK_URL=
+DB_ROOT_PASSWORD=
 ```
 
 #### 3. Database Migrations

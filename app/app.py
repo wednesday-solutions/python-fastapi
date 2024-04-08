@@ -27,6 +27,9 @@ if settings.SENTRY_DSN:
         traces_sample_rate=1.0,  # Sample rate of 100%
     )
 
+# Check required environment variables
+settings.check_environment_variables()
+
 app = FastAPI(
     title="FastAPI Template",
     description="This is my first API use FastAPI",
