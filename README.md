@@ -6,20 +6,20 @@ This repository provides a template for creating and deploying a FastAPI project
 
 - [Features](#features)
 - [Getting started](#getting-started)
-   - Initialize & Setup Environment
-   - Variables Configuration
-   - Database Migrations
-   - Redis Dependency & Installation
-   - Celery Dependency
-   - Run the Project
+   - [Initialize & Setup Environment](#1-initialize--setup-environment)
+   - [Variables Configuration](#2-variables-configuration)
+   - [Database Migrations](#3-database-migrations)
+   - [Redis Dependency & Installation](#4-redis-dependency)
+   - [Celery Dependency](#5-celery-dependency)
+   - [Run the Project](#6-run-the-project)
 - [Advanced Usage](#advanced-usage)
-   - Circuit breakers
-   - Configuring Signoz Monitoring Tool
-   - Logging with Signoz
-   - Database Monitoring Using Percona
-   - Deploy Service on AWS ECS
-   - Related Dashboard Links
-   - Additional Useful scripts
+   - [Circuit breakers](#circuit-breakers)
+   - [Configuring Signoz Monitoring Tool](#configuring-signoz-monitoring-tool)
+   - [Logging with Signoz](#logging-with-signoz)
+   - [Database Monitoring Using Percona](#database-monitoring-using-percona)
+   - [Deploy Service on AWS ECS](#deploy-service-on-aws-ecs)
+   - [Related Dashboard Links](#related-dashboard-links)
+   - [Additional Useful scripts](#additional-useful-scripts)
 
 ### Features
 
@@ -119,7 +119,7 @@ Run following command to initiallize the celery worker
 ```
 celery -A app.app.celery worker -l info
 ```
-Turn Up Celery Flower with
+[Optional] Turn Up Celery Flower with
 ```
 flower --broker=${REDIS_URL}/6 --port=5555
 ```
@@ -274,7 +274,7 @@ Note: Ensure you have AWS credentials configured and AWS Copilot installed for s
 If you are new to AWS Copilot or you want to learn more about AWS Copilot, please refer to [this helpful article](https://www.wednesday.is/writing-tutorials/how-to-use-copilot-to-deploy-projects-on-ecs) that guides you through the process of setting up AWS Copilot locally as well as also helps you understand how you can publish and update an application using 4 simple steps.
 
 
-#### Dashboard Links
+#### Related Dashboard Links
 - Percona: https://localhost:443
 - Flower: http://localhost:5556
 - Locust UI: http://localhost:8089
