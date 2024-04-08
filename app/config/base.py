@@ -11,19 +11,10 @@ class DBSettings(BaseSettings):
     DB_PASSWORD: str
 
     class Config:
-        env_file = ".env"
+        env_file = ".env.local"
 
 
-class FlagFeatureSettings(BaseSettings):
-    CACHE_ENABLED: bool
-    SENTRY_ENABLED: bool = False
-    SLACK_ENABLED: bool = False
-
-    class Config:
-        env_file = ".env"
-
-
-class Settings(FlagFeatureSettings, DBSettings):
+class Settings(DBSettings):
     SECRET_KEY: str
     REDIS_URL: str
     SENTRY_DSN: str | None
@@ -32,7 +23,7 @@ class Settings(FlagFeatureSettings, DBSettings):
     CACHE_MAX_AGE: int = 60
 
     class Config:
-        env_file = ".env"
+        env_file = ".env.local"
 
 
 class CachedEndpoints(BaseSettings):

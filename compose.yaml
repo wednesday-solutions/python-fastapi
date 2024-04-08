@@ -45,14 +45,12 @@ services:
     restart: always
     container_name: fast-api-app
     env_file:
-      - ./.env.${ENVIRONMENT_NAME}
+      - ./.env.local
     depends_on:
       wait-for-db:
         condition: service_completed_successfully
     ports:
       - "${SERVER_PORT}:${SERVER_PORT}"
-    environment:
-      ENVIRONMENT_NAME: "${ENVIRONMENT_NAME}"
     networks:
       - fast-api-network
 
@@ -62,7 +60,7 @@ services:
       dockerfile: Dockerfile
     command: ['celery', '-A', 'app.app.celery', 'worker', '-l', 'info']
     env_file:
-      -  .env.${ENVIRONMENT_NAME}
+      -  .env.local
     depends_on:
       - redis
       - app

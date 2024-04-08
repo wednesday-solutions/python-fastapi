@@ -1,32 +1,24 @@
 from __future__ import annotations
 
-from app.config.base import settings
 from app.config.redis_config import get_redis_pool
 
 
 class CacheUtils:
-    CACHE_ENABLED = settings.CACHE_ENABLED
-
     @classmethod
     async def create_cache(cls, resp, key: str, ex: int = 60):
-        if cls.CACHE_ENABLED:
-            redis = await get_redis_pool()
-            await redis.set(key, resp, ex=ex)
+        redis = await get_redis_pool()
+        await redis.set(key, resp, ex=ex)
 
     @classmethod
     async def retrieve_cache(cls, key: str):
-        if cls.CACHE_ENABLED:
-            redis = await get_redis_pool()
-            data = await redis.get(key)
-            if not data:
-                return None, None
-            expire = await redis.ttl(key)
-            return data, expire
-        return None, None
+        redis = await get_redis_pool()
+        data = await redis.get(key)
+        if not data:
+            return None, None
+        expire = await redis.ttl(key)
+        return data, expire
 
     @classmethod
     async def invalidate_cache(cls, key: str):
-        if cls.CACHE_ENABLED:
-            redis = await get_redis_pool()
-            await redis.delete(key)
-        return None
+        redis = await get_redis_pool()
+        await redis.delete(key)

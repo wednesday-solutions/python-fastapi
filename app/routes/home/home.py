@@ -35,7 +35,7 @@ async def external_service_endpoint():
 
 @home_router.get("/sentry-test", tags=["Home"])
 def sentry_endpoint():
-    if not settings.SENTRY_ENABLED:
+    if not settings.SENTRY_DSN:
         raise HTTPException(status_code=503, detail="Sentry is not enabled")
     raise CentryTestException("Sentry Test")
 

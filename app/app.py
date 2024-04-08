@@ -21,7 +21,7 @@ from app.utils.exception_handler import validation_exception_handler
 
 
 # Sentry Initialization
-if settings.SENTRY_ENABLED:
+if settings.SENTRY_DSN:
     sentry_sdk.init(
         dsn=settings.SENTRY_DSN,
         traces_sample_rate=1.0,  # Sample rate of 100%
@@ -49,7 +49,7 @@ app.add_middleware(RateLimitMiddleware)
 app.add_middleware(RequestIdInjection)
 app.add_middleware(CacheMiddleware, cached_endpoints=cached_endpoints.CACHED_ENDPOINTS)
 
-if settings.SENTRY_ENABLED:
+if settings.SENTRY_DSN:
     try:
         app.add_middleware(SentryAsgiMiddleware)
     except Exception as e:
