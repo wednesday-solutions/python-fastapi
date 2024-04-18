@@ -6,7 +6,20 @@ This repository provides a template for creating and deploying a FastAPI project
 
 - [Features](#features)
 - [Getting started](#getting-started)
+   - [Initialize & Setup Environment](#1-initialize--setup-environment)
+   - [Variables Configuration](#2-variables-configuration)
+   - [Database Migrations](#3-database-migrations)
+   - [Redis Dependency & Installation](#4-redis-dependency)
+   - [Celery Dependency](#5-celery-dependency)
+   - [Run the Project](#6-run-the-project)
 - [Advanced Usage](#advanced-usage)
+   - [Circuit breakers](#circuit-breakers)
+   - [Configuring Signoz Monitoring Tool](#configuring-signoz-monitoring-tool)
+   - [Logging with Signoz](#logging-with-signoz)
+   - [Database Monitoring Using Percona](#database-monitoring-using-percona)
+   - [Deploy Service on AWS ECS](#deploy-service-on-aws-ecs)
+   - [Related Dashboard Links](#related-dashboard-links)
+   - [Additional Useful scripts](#additional-useful-scripts)
 
 ### Features
 
@@ -38,23 +51,42 @@ This repository provides a template for creating and deploying a FastAPI project
 - Docker
 - mysql
 
-#### 1. Initialize Local Environment
+#### 1. Initialize & Setup Environment
 
-- To set up your local environment, run the following script:
+- To initialize and set up your environment, run the following script:
 
 ```
 ./scripts/initialize-env.sh
 ```
 
-This script installs the necessary dependencies and prepares the environment for running the FastAPI application on your local machine.
+This script installs the necessary dependencies and prepares the environment for running the FastAPI application on your machine.
 
-Create a .env.local file with reference of .env.example
-  Run following command to inject env file
-  ```shell
-  set -a source .env.local set +a
-  ```
+##### Activate the environment
+```
+# Mac & Linux:
+source ./venv/bin/activate
 
-#### 2. Database Migrations
+# Windows
+.\venv\scripts\activate
+```
+
+#### 2. Variables Configuration
+Update database environment variables in your .env.local file:
+```
+DB_NAME=
+DB_HOSTNAME=localhost
+DB_PORT=3306
+DB_USERNAME=
+DB_PASSWORD=
+```
+Additional Configuration (Optional):
+```
+SENTRY_DSN=
+SLACK_WEBHOOK_URL=
+DB_ROOT_PASSWORD=
+```
+
+#### 3. Database Migrations
 Create new database migrations when you make changes to your models. Use the following command:
 ```
 alembic revision -m 'brief description of changes'
@@ -68,24 +100,40 @@ alembic upgrade head
 ```
 This command updates the database schema to reflect the latest changes defined in the migration scripts
 
-#### 3. Redis Dependency
+#### 4. Redis Dependency
+##### Install Locally:
+```
+# Mac
+brew install redis
+brew services start redis
+
+# Windows
+Please refer: https://developer.redis.com/create/windows/
+
+# Linux
+sudo apt install redis
+sudo systemctl enable redis
+sudo systemctl start redis
+sudo systemctl status redis  # verify status
+
+```
+
+##### Install via docker:
 ```
 docker run --name recorder-redis -p 6379:6379 -d redis:alpine
 ```
-or add the REDIS_URL in .env.local file
 
+#### 5. Celery Dependency
+Run following command to initiallize the celery worker
+```
+celery -A app.app.celery worker -l info
+```
+[Optional] Turn Up Celery Flower with
+```
+flower --broker=${REDIS_URL}/6 --port=5555
+```
 
-#### 4. Celery Dependency
-- Run following command to initiallize the celery worker
-  ```shell
-    celery -A app.app.celery worker -l info
-  ```
-- Turn Up Celery Flower with
-  ```shell
-  flower --broker=${REDIS_URL}/6 --port=5555
-  ```
-
-#### 5. Run the Project
+#### 6. Run the Project
 
 ##### Running Application Locally
 
@@ -106,23 +154,9 @@ This script upgrades the database migrations using Alembic and starts the FastAP
   docker compose --env-file .env.docker up
   ```
 
+### Advanced Usage
 
-#### 6. Deploy Service on AWS ECS
-To deploy the FastAPI application on AWS ECS, use the following script:
-
-```
-./scripts/setup-ecs.sh develop
-```
-
-The setup-ecs.sh script leverages AWS Copilot to deploy the service. Provide the environment name as an argument (e.g., develop). The script creates and deploys an environment, then deploys the FastAPI service on that environment.
-
-Note: Ensure you have AWS credentials configured and AWS Copilot installed for successful deployment.
-
-#### New to AWS Copilot?
-If you are new to AWS Copilot or you want to learn more about AWS Copilot, please refer to [this helpful article](https://www.wednesday.is/writing-tutorials/how-to-use-copilot-to-deploy-projects-on-ecs) that guides you through the process of setting up AWS Copilot locally as well as also helps you understand how you can publish and update an application using 4 simple steps.
-
-
-#### 7. Circuit breakers
+#### Circuit breakers
 
 Using the Circuit Breaker for External API Calls
 
@@ -147,9 +181,7 @@ async def external_service_endpoint():
         raise HTTPException(status_code=503, detail="Service temporarily unavailable")
 ```
 
-### Advanced Usage
-
-#### Using Signoz Monitoring Tool
+#### Configuring Signoz Monitoring Tool
 
 To utilize Signoz for monitoring your applications, follow these steps:
 
@@ -236,14 +268,29 @@ To monitor your database using Percona, follow these steps:
 
 By following these steps, you'll successfully configure Percona to monitor your MySQL database.
 
-#### Dashboard Links
+#### Deploy Service on AWS ECS
+To deploy the FastAPI application on AWS ECS, use the following script:
+
+```
+./scripts/setup-ecs.sh develop
+```
+
+The setup-ecs.sh script leverages AWS Copilot to deploy the service. Provide the environment name as an argument (e.g., develop). The script creates and deploys an environment, then deploys the FastAPI service on that environment.
+
+Note: Ensure you have AWS credentials configured and AWS Copilot installed for successful deployment.
+
+#### New to AWS Copilot?
+If you are new to AWS Copilot or you want to learn more about AWS Copilot, please refer to [this helpful article](https://www.wednesday.is/writing-tutorials/how-to-use-copilot-to-deploy-projects-on-ecs) that guides you through the process of setting up AWS Copilot locally as well as also helps you understand how you can publish and update an application using 4 simple steps.
+
+
+#### Related Dashboard Links
 - Percona: https://localhost:443
 - Flower: http://localhost:5556
 - Locust UI: http://localhost:8089
 - Swagger UI: http://localhost:8000
 
 
-#### Useful scripts
+#### Additional Useful scripts
 - Tests - scripts/run_tests.sh
 - Linting & Formatting - scripts/lint_and_format.sh
 - Load tests - scripts/load_tests.sh (Change [locust.conf](https://docs.locust.io/en/stable/configuration.html) accordinly)

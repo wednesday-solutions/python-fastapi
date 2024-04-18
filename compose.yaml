@@ -62,7 +62,7 @@ services:
       dockerfile: Dockerfile
     command: ['celery', '-A', 'app.app.celery', 'worker', '-l', 'info']
     env_file:
-      -  .env.${ENVIRONMENT_NAME}
+      - .env.${ENVIRONMENT_NAME}
     depends_on:
       - redis
       - app

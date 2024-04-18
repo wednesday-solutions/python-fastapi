@@ -16,7 +16,7 @@ def send_slack_message(payload):
     Returns:
         HTTP response code, i.e., <Response [503]>
     """
-    if not settings.SLACK_ENABLEDs:
+    if not settings.SLACK_WEBHOOK_URL:
         return
 
     webhook_url = settings.SLACK_WEBHOOK_URL

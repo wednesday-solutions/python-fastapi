@@ -11,28 +11,29 @@ class DBSettings(BaseSettings):
     DB_PASSWORD: str
 
     class Config:
-        env_file = ".env"
+        env_file = ".env.local"
 
 
-class FlagFeatureSettings(BaseSettings):
-    CACHE_ENABLED: bool
-    SENTRY_ENABLED: bool = False
-    SLACK_ENABLED: bool = False
-
-    class Config:
-        env_file = ".env"
-
-
-class Settings(FlagFeatureSettings, DBSettings):
+class Settings(DBSettings):
     SECRET_KEY: str
     REDIS_URL: str
     SENTRY_DSN: str | None
-    SLACK_WEBHOOK_URL: str
+    SLACK_WEBHOOK_URL: str | None
     ALLOWED_HOSTS: list = ["*"]
     CACHE_MAX_AGE: int = 60
 
     class Config:
-        env_file = ".env"
+        env_file = ".env.local"
+
+    def check_environment_variables(self):
+        if not self.DB_HOSTNAME or not self.DB_PORT or not self.DB_NAME or not self.DB_USERNAME or not self.DB_PASSWORD:
+            raise ValueError("Database environment variables are not set")
+
+        if not self.SECRET_KEY:
+            raise ValueError("SECRET_KEY is not set")
+
+        if not self.REDIS_URL:
+            raise ValueError("REDIS_URL is not set")
 
 
 class CachedEndpoints(BaseSettings):
