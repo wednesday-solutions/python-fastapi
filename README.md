@@ -1,4 +1,42 @@
-# FastAPI Template
+
+<img align="left" src="./assets/fastAPILogo.svg" width="480" height="510" />
+
+<div>
+  <a href="https://www.wednesday.is?utm_source=gthb&utm_medium=repo&utm_campaign=serverless" align="left" style="margin-left: 0;">
+    <img src="https://uploads-ssl.webflow.com/5ee36ce1473112550f1e1739/5f5879492fafecdb3e5b0e75_wednesday_logo.svg">
+  </a>
+  <p>
+    <h1 align="left">Python FastAPI Template
+    </h1>
+  </p>
+
+  <p>
+An enterprise Python FastAPI template application to create and deploy FastAPI project.
+  </p>
+
+  ___
+
+
+  <p>
+    <h4>
+      Expert teams of digital product strategists, developers, and designers.
+    </h4>
+  </p>
+
+  <div>
+    <a href="https://www.wednesday.is/contact-us?utm_source=gthb&utm_medium=repo&utm_campaign=serverless" target="_blank">
+      <img src="https://uploads-ssl.webflow.com/5ee36ce1473112550f1e1739/5f6ae88b9005f9ed382fb2a5_button_get_in_touch.svg" width="121" height="34">
+    </a>
+    <a href="https://github.com/wednesday-solutions/" target="_blank">
+      <img src="https://uploads-ssl.webflow.com/5ee36ce1473112550f1e1739/5f6ae88bb1958c3253756c39_button_follow_on_github.svg" width="168" height="34">
+    </a>
+  </div>
+
+  ___
+
+  <span>We’re always looking for people who value their work, so come and join us. <a href="https://www.wednesday.is/hiring">We are hiring!</a></span>
+</div>
+
 
 This repository provides a template for creating and deploying a FastAPI project. Follow the steps below to set up the local environment, run the project, manage database migrations, and deploy the service on AWS ECS.
 
@@ -25,24 +63,23 @@ This repository provides a template for creating and deploying a FastAPI project
 
 - Python 3.11+ support
 - SQLAlchemy 2.0+ support
-- Asynchoronous capabilities
+- Asynchronous capabilities
 - Database migrations using Alembic
 - Basic Authentication using JWT
 - Caching using Redis
-- Error reporting using Sentry
-- Asynchoronous background tasks using Celery
-- Test cases
 - Dockerized application
+- Asynchronous background tasks using Celery
+- Feature flagging to enable/disable features
 - Readily available CRUD operations
 - Readily available middlewares for rate limiting, request id injection etc
+- Error reporting using Sentry
 - Type checking using mypy
 - Linting using flake8
 - Formatting using black
 - Code quality analysis using SonarQube
-- Application monitoring using Signoz
-- Feature flagging added - User can enable/disable features
-- Database Monitoring using percona
-- Loadtests using locust
+- Application monitoring using SigNoz
+- Database Monitoring using Percona
+- Load-tests using Locust
 
 ### Getting Started
 
@@ -55,13 +92,15 @@ This repository provides a template for creating and deploying a FastAPI project
 
 - To initialize and set up your environment, run the following script:
 
-```
+```shell
 ./scripts/initialize-env.sh
 ```
 
 This script installs the necessary dependencies and prepares the environment for running the FastAPI application on your machine.
 
 ##### Activate the environment
+
+- To activate the python environment, run the following command:
 ```
 # Mac & Linux:
 source ./venv/bin/activate
@@ -88,48 +127,56 @@ DB_ROOT_PASSWORD=
 
 #### 3. Database Migrations
 Create new database migrations when you make changes to your models. Use the following command:
-```
+```shell
 alembic revision -m 'brief description of changes'
 ```
 
 This command initializes a new migration script based on the changes made to your models. Provide a brief description of the changes in the migration message.
 
 Apply the database migrations with the following command:
-```
+```shell
 alembic upgrade head
 ```
 This command updates the database schema to reflect the latest changes defined in the migration scripts
 
 #### 4. Redis Dependency
+
+To install and set-up Redis execute the following commands: 
+
 ##### Install Locally:
-```
-# Mac
-brew install redis
-brew services start redis
 
-# Windows
-Please refer: https://developer.redis.com/create/windows/
 
-# Linux
-sudo apt install redis
-sudo systemctl enable redis
-sudo systemctl start redis
-sudo systemctl status redis  # verify status
+- ###### Mac
+    ```shell
+    brew install redis
+    brew services start redis
+    ```
 
-```
+- ###### Windows
+    ```
+    Please refer: https://developer.redis.com/create/windows/
+    ```
+- ###### Linux
+    ```shell
+    sudo apt install redis
+    sudo systemctl enable redis
+    sudo systemctl start redis
+    sudo systemctl status redis  # verify status
+    
+    ```
 
 ##### Install via docker:
-```
+```shell
 docker run --name recorder-redis -p 6379:6379 -d redis:alpine
 ```
 
 #### 5. Celery Dependency
-Run following command to initiallize the celery worker
-```
+To initialize the celery worker execute the following command:
+```shell
 celery -A app.app.celery worker -l info
 ```
-[Optional] Turn Up Celery Flower with
-```
+[Optional] To activate Celery Flower execute the following command:
+```shell
 flower --broker=${REDIS_URL}/6 --port=5555
 ```
 
@@ -137,7 +184,7 @@ flower --broker=${REDIS_URL}/6 --port=5555
 
 ##### Running Application Locally
 
-```
+```shell
 ./scripts/local_server.sh
 ```
 
@@ -149,7 +196,7 @@ This script upgrades the database migrations using Alembic and starts the FastAP
 - Inject Docker environment using
   ```shell
   set -a source .env.docker set +a
-- use following command to turn on the application
+- Execute following command to turn on the application
   ```shell
   docker compose --env-file .env.docker up
   ```
@@ -181,20 +228,20 @@ async def external_service_endpoint():
         raise HTTPException(status_code=503, detail="Service temporarily unavailable")
 ```
 
-#### Configuring Signoz Monitoring Tool
+#### Configuring SigNoz Monitoring Tool
 
-To utilize Signoz for monitoring your applications, follow these steps:
+To utilize SigNoz for monitoring your applications, follow these steps:
 
 1. **Sign Up:**
-   - Go to the Signoz cloud portal [here](https://signoz.io/teams/).
+   - Go to the SigNoz cloud portal [here](https://signoz.io/teams/).
    - Sign up for an account.
-   - After signing up, you will receive a verification email from Signoz.
+   - After signing up, you will receive a verification email from SigNoz.
 
 2. **Verify Email:**
-   - Verify your email through the verification email sent by Signoz.
+   - Verify your email through the verification email sent by SigNoz.
 
 3. **Application Monitoring Setup:**
-   - Once verified, log in to your Signoz account.
+   - Once verified, log in to your SigNoz account.
    - Click on "Application Monitoring".
 
 4. **Configure Application:**
@@ -205,34 +252,36 @@ To utilize Signoz for monitoring your applications, follow these steps:
 5. **Setup Quickstart:**
    - Select your OS and architecture.
    - Choose Quickstart.
+   
 6. **Install Dependencies:**
-   - Skip this step and move to next step
+   - Skip this step and move to next step.
+
 7. **Configure Environment Variables:**
    - In the next step, you need to update the values for the following variables in `.env.local` and `.env.docker` files:
-     ```shell
+     ```
      OTEL_RESOURCE_ATTRIBUTES=
      OTEL_EXPORTER_OTLP_ENDPOINT=
      OTEL_EXPORTER_OTLP_HEADERS=
      OTEL_EXPORTER_OTLP_PROTOCOL=
      ```
 
-#### Logging with Signoz
+#### Logging with SigNoz
 
-To enable logging with Signoz, follow these steps:
+To enable logging with SigNoz, follow these steps:
 
 1. **Open Dashboard:**
-   - Log in to your Signoz dashboard.
+   - Log in to your SigNoz dashboard.
 
 2. **Navigate to Logs Section:**
    - Go to the logs section of your dashboard.
 
 3. **Configure Log Sending:**
-   - Click on "Sending Logs to Signoz".
+   - Click on "Sending Logs to SigNoz".
 
 4. **Follow Instructions:**
-   - Follow the instructions provided to configure log sending to Signoz.
+   - Follow the instructions provided to configure log sending to SigNoz.
 
-By following these steps, you can effectively set up application monitoring and logging using Signoz for your Python FastAPI applications.
+By following these steps, you can effectively set up application monitoring and logging using SigNoz for your Python FastAPI applications.
 
 #### Database Monitoring Using Percona
 
@@ -246,7 +295,7 @@ To monitor your database using Percona, follow these steps:
 
 3. **Login:**
    - Use the following credentials to log in:
-     ```shell
+     ```
      Username: admin
      Password: admin
      ```
@@ -271,7 +320,7 @@ By following these steps, you'll successfully configure Percona to monitor your 
 #### Deploy Service on AWS ECS
 To deploy the FastAPI application on AWS ECS, use the following script:
 
-```
+```shell
 ./scripts/setup-ecs.sh develop
 ```
 
