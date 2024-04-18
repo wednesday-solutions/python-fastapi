@@ -52,8 +52,8 @@ This repository provides a template for creating and deploying a FastAPI project
    - [Run the Project](#6-run-the-project)
 - [Advanced Usage](#advanced-usage)
    - [Circuit breakers](#circuit-breakers)
-   - [Configuring Signoz Monitoring Tool](#configuring-signoz-monitoring-tool)
-   - [Logging with Signoz](#logging-with-signoz)
+   - [Configuring SigNoz Monitoring Tool](#configuring-signoz-monitoring-tool)
+   - [Logging with SigNoz](#logging-with-signoz)
    - [Database Monitoring Using Percona](#database-monitoring-using-percona)
    - [Deploy Service on AWS ECS](#deploy-service-on-aws-ecs)
    - [Related Dashboard Links](#related-dashboard-links)
@@ -86,7 +86,7 @@ This repository provides a template for creating and deploying a FastAPI project
 #### Requirements:
 - Python 3
 - Docker
-- mysql
+- MySQL
 
 #### 1. Initialize & Setup Environment
 
@@ -310,7 +310,7 @@ To monitor your database using Percona, follow these steps:
    - Choose MySQL as the service you want to monitor.
 
 7. **Provide Database Details:**
-   - Enter the hostname, username, password, and any other necessary environment variables required to connect to your MySQL database.
+   - Enter the hostname, username, password and any other necessary environment variables required to connect to your MySQL database.
 
 8. **Finish Configuration:**
    - Click add service.
@@ -342,4 +342,4 @@ If you are new to AWS Copilot or you want to learn more about AWS Copilot, pleas
 #### Additional Useful scripts
 - Tests - scripts/run_tests.sh
 - Linting & Formatting - scripts/lint_and_format.sh
-- Load tests - scripts/load_tests.sh (Change [locust.conf](https://docs.locust.io/en/stable/configuration.html) accordinly)
+- Load tests - scripts/load_tests.sh (Change [locust.conf](https://docs.locust.io/en/stable/configuration.html) accordingly)
