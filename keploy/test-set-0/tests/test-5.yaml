@@ -1,0 +1,50 @@
+version: api.keploy.io/v1beta1
+kind: Http
+name: test-5
+spec:
+    metadata: {}
+    req:
+        method: POST
+        proto_major: 1
+        proto_minor: 1
+        url: http://0.0.0.0:8000/api/users/signin
+        header:
+            Accept: application/json
+            Content-Length: "59"
+            Content-Type: application/json
+            Host: 0.0.0.0:8000
+            User-Agent: curl/7.88.1
+        body: |-
+            {
+              "email": "anas10@gmail.com",
+              "password": "Test@123"
+            }
+        timestamp: 2024-06-20T12:03:11.658368491Z
+    resp:
+        status_code: 200
+        header:
+            Content-Length: "225"
+            Content-Type: application/json
+            Date: Thu, 20 Jun 2024 12:03:11 GMT
+            Server: uvicorn
+        body: '{"success":true,"message":"User logged in successfully.","data":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTg4ODg1OTIsInN1YiI6ImFuYXMxMEBnbWFpbC5jb20iLCJpZCI6Mn0.q8gKs2_NLaEqxNw3isN6Ng44uhe3zd5arB82OcC9rac"}}'
+        status_message: OK
+        proto_major: 0
+        proto_minor: 0
+        timestamp: 2024-06-20T12:03:14.154929266Z
+    objects: []
+    assertions:
+        noise:
+            header.Date: []
+    created: 1718884994
+curl: |-
+    curl --request POST \
+      --url http://0.0.0.0:8000/api/users/signin \
+      --header 'Accept: application/json' \
+      --header 'Content-Type: application/json' \
+      --header 'Host: 0.0.0.0:8000' \
+      --header 'User-Agent: curl/7.88.1' \
+      --data '{
+      "email": "anas10@gmail.com",
+      "password": "Test@123"
+    }'

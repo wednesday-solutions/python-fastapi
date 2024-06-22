@@ -1,0 +1,39 @@
+version: api.keploy.io/v1beta1
+kind: Http
+name: test-16
+spec:
+    metadata: {}
+    req:
+        method: GET
+        proto_major: 1
+        proto_minor: 1
+        url: http://0.0.0.0:8000/api/home/
+        header:
+            Accept: application/json
+            Host: 0.0.0.0:8000
+            User-Agent: curl/7.88.1
+        body: ""
+        timestamp: 2024-06-21T08:01:54.915198236Z
+    resp:
+        status_code: 200
+        header:
+            Content-Length: "40"
+            Content-Type: application/json
+            Date: Fri, 21 Jun 2024 08:01:54 GMT
+            Server: uvicorn
+        body: '{"response":"service up and running..!"}'
+        status_message: OK
+        proto_major: 0
+        proto_minor: 0
+        timestamp: 2024-06-21T08:01:57.003054472Z
+    objects: []
+    assertions:
+        noise:
+            header.Date: []
+    created: 1718956917
+curl: |
+    curl --request GET \
+      --url http://0.0.0.0:8000/api/home/ \
+      --header 'Host: 0.0.0.0:8000' \
+      --header 'User-Agent: curl/7.88.1' \
+      --header 'Accept: application/json' \

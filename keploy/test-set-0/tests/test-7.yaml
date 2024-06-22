@@ -1,0 +1,50 @@
+version: api.keploy.io/v1beta1
+kind: Http
+name: test-7
+spec:
+    metadata: {}
+    req:
+        method: POST
+        proto_major: 1
+        proto_minor: 1
+        url: http://0.0.0.0:8000/api/users/signin
+        header:
+            Accept: application/json
+            Content-Length: "59"
+            Content-Type: application/json
+            Host: 0.0.0.0:8000
+            User-Agent: curl/7.88.1
+        body: |-
+            {
+              "email": "anas12@gmail.com",
+              "password": "Test@123"
+            }
+        timestamp: 2024-06-20T12:03:29.213266592Z
+    resp:
+        status_code: 400
+        header:
+            Content-Length: "57"
+            Content-Type: application/json
+            Date: Thu, 20 Jun 2024 12:03:28 GMT
+            Server: uvicorn
+        body: '{"success":false,"message":"No Users found in database."}'
+        status_message: Bad Request
+        proto_major: 0
+        proto_minor: 0
+        timestamp: 2024-06-20T12:03:31.471115162Z
+    objects: []
+    assertions:
+        noise:
+            header.Date: []
+    created: 1718885011
+curl: |-
+    curl --request POST \
+      --url http://0.0.0.0:8000/api/users/signin \
+      --header 'Host: 0.0.0.0:8000' \
+      --header 'User-Agent: curl/7.88.1' \
+      --header 'Accept: application/json' \
+      --header 'Content-Type: application/json' \
+      --data '{
+      "email": "anas12@gmail.com",
+      "password": "Test@123"
+    }'

@@ -5,6 +5,7 @@ repos:
     -   id: trailing-whitespace
     -   id: end-of-file-fixer
     -   id: check-yaml
+        exclude: ^keploy/.*\.yaml$
     -   id: debug-statements
     -   id: requirements-txt-fixer
 -   repo: https://github.com/asottile/setup-cfg-fmt

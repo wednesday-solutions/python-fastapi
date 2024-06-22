@@ -1,0 +1,54 @@
+version: api.keploy.io/v1beta1
+kind: Http
+name: test-4
+spec:
+    metadata: {}
+    req:
+        method: POST
+        proto_major: 1
+        proto_minor: 1
+        url: http://0.0.0.0:8000/api/users/register
+        header:
+            Accept: application/json
+            Content-Length: "110"
+            Content-Type: application/json
+            Host: 0.0.0.0:8000
+            User-Agent: curl/7.88.1
+        body: |-
+            {
+              "name": "Anas Nadeem",
+              "email": "anas12@gmail.com",
+              "mobile": "9134567890",
+              "password": "Test@123"
+            }
+        timestamp: 2024-06-20T12:02:55.683006035Z
+    resp:
+        status_code: 400
+        header:
+            Content-Length: "63"
+            Content-Type: application/json
+            Date: Thu, 20 Jun 2024 12:02:55 GMT
+            Server: uvicorn
+        body: '{"success":false,"message":"Mobile number already registered."}'
+        status_message: Bad Request
+        proto_major: 0
+        proto_minor: 0
+        timestamp: 2024-06-20T12:02:57.93794214Z
+    objects: []
+    assertions:
+        noise:
+            header.Date: []
+    created: 1718884977
+curl: |-
+    curl --request POST \
+      --url http://0.0.0.0:8000/api/users/register \
+      --header 'Host: 0.0.0.0:8000' \
+      --header 'User-Agent: curl/7.88.1' \
+      --header 'Accept: application/json' \
+      --header 'Content-Type: application/json' \
+      --data '{
+      "name": "Anas Nadeem",
+      "email": "anas12@gmail.com",
+      "mobile": "9134567890",
+      "password": "Test@123"
+    }'

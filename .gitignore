@@ -17,3 +17,6 @@ tmp/
 temp/
 *.xml
 .idea
+
+# Keploy reports
+keploy/reports

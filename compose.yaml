@@ -18,6 +18,8 @@ services:
       retries: 3
     depends_on:
       - redis
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
     volumes:
       - db:/var/lib/mysql
       - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
@@ -53,6 +55,8 @@ services:
       - "${SERVER_PORT}:${SERVER_PORT}"
     environment:
       ENVIRONMENT_NAME: "${ENVIRONMENT_NAME}"
+    volumes:
+      - ./:/app
     networks:
       - fast-api-network
 

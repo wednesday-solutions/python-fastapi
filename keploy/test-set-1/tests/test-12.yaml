@@ -1,0 +1,41 @@
+version: api.keploy.io/v1beta1
+kind: Http
+name: test-12
+spec:
+    metadata: {}
+    req:
+        method: GET
+        proto_major: 1
+        proto_minor: 1
+        url: http://0.0.0.0:8000/api/users/4
+        header:
+            Accept: application/json
+            Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTg5NjA0MjYsInN1YiI6ImFuYXNAZ21haWwuY29tIiwiaWQiOjR9.A_shJpATYtGXBnLD9zRDogHn9pWmI9_Ev9FXHW3qfj0
+            Host: 0.0.0.0:8000
+            User-Agent: curl/7.88.1
+        body: ""
+        timestamp: 2024-06-21T08:01:12.681300832Z
+    resp:
+        status_code: 200
+        header:
+            Content-Length: "76"
+            Content-Type: application/json
+            Date: Fri, 21 Jun 2024 08:01:12 GMT
+            Server: uvicorn
+        body: '{"id":4,"name":"Anas Nadeem","email":"anas@gmail.com","mobile":"1234567890"}'
+        status_message: OK
+        proto_major: 0
+        proto_minor: 0
+        timestamp: 2024-06-21T08:01:14.853361418Z
+    objects: []
+    assertions:
+        noise:
+            header.Date: []
+    created: 1718956874
+curl: |
+    curl --request GET \
+      --url http://0.0.0.0:8000/api/users/4 \
+      --header 'Host: 0.0.0.0:8000' \
+      --header 'User-Agent: curl/7.88.1' \
+      --header 'Accept: application/json' \
+      --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTg5NjA0MjYsInN1YiI6ImFuYXNAZ21haWwuY29tIiwiaWQiOjR9.A_shJpATYtGXBnLD9zRDogHn9pWmI9_Ev9FXHW3qfj0' \

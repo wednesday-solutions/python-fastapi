@@ -1,0 +1,41 @@
+version: api.keploy.io/v1beta1
+kind: Http
+name: test-9
+spec:
+    metadata: {}
+    req:
+        method: GET
+        proto_major: 1
+        proto_minor: 1
+        url: http://0.0.0.0:8000/api/users/1
+        header:
+            Accept: application/json
+            Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTg5NjA0MjYsInN1YiI6ImFuYXNAZ21haWwuY29tIiwiaWQiOjR9.A_shJpATYtGXBnLD9zRDogHn9pWmI9_Ev9FXHW3qfj0
+            Host: 0.0.0.0:8000
+            User-Agent: curl/7.88.1
+        body: ""
+        timestamp: 2024-06-21T08:00:45.075457303Z
+    resp:
+        status_code: 401
+        header:
+            Content-Length: "42"
+            Content-Type: application/json
+            Date: Fri, 21 Jun 2024 08:00:44 GMT
+            Server: uvicorn
+        body: '{"success":false,"message":"Unauthorized"}'
+        status_message: Unauthorized
+        proto_major: 0
+        proto_minor: 0
+        timestamp: 2024-06-21T08:00:47.137791469Z
+    objects: []
+    assertions:
+        noise:
+            header.Date: []
+    created: 1718956847
+curl: |
+    curl --request GET \
+      --url http://0.0.0.0:8000/api/users/1 \
+      --header 'Host: 0.0.0.0:8000' \
+      --header 'User-Agent: curl/7.88.1' \
+      --header 'Accept: application/json' \
+      --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTg5NjA0MjYsInN1YiI6ImFuYXNAZ21haWwuY29tIiwiaWQiOjR9.A_shJpATYtGXBnLD9zRDogHn9pWmI9_Ev9FXHW3qfj0' \
