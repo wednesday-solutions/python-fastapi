@@ -2,7 +2,7 @@
 <img align="left" src="./assets/fastAPILogo.svg" width="480" height="510" />
 
 <div>
-  <a href="https://www.wednesday.is?utm_source=gthb&utm_medium=repo&utm_campaign=serverless" align="left" style="margin-left: 0;">
+  <a href="https://www.wednesday.is/?utm_source=github&utm_medium=python-fastapi" align="left" style="margin-left: 0;">
     <img src="https://uploads-ssl.webflow.com/5ee36ce1473112550f1e1739/5f5879492fafecdb3e5b0e75_wednesday_logo.svg">
   </a>
   <p>
@@ -24,7 +24,7 @@ An enterprise Python FastAPI template application to create and deploy FastAPI p
   </p>
 
   <div>
-    <a href="https://www.wednesday.is/contact-us?utm_source=gthb&utm_medium=repo&utm_campaign=serverless" target="_blank">
+    <a href="https://www.wednesday.is/contact-us/?utm_source=github&utm_medium=python-fastapi" target="_blank">
       <img src="https://uploads-ssl.webflow.com/5ee36ce1473112550f1e1739/5f6ae88b9005f9ed382fb2a5_button_get_in_touch.svg" width="121" height="34">
     </a>
     <a href="https://github.com/wednesday-solutions/" target="_blank">
@@ -34,7 +34,7 @@ An enterprise Python FastAPI template application to create and deploy FastAPI p
 
   ___
 
-  <span>We’re always looking for people who value their work, so come and join us. <a href="https://www.wednesday.is/hiring">We are hiring!</a></span>
+  <span>We’re always looking for people who value their work, so come and join us. <a href="https://www.wednesday.is/hiring/?utm_source=github&utm_medium=python-fastapi">We are hiring!</a></span>
 </div>
 
 
@@ -329,7 +329,7 @@ The setup-ecs.sh script leverages AWS Copilot to deploy the service. Provide the
 Note: Ensure you have AWS credentials configured and AWS Copilot installed for successful deployment.
 
 #### New to AWS Copilot?
-If you are new to AWS Copilot or you want to learn more about AWS Copilot, please refer to [this helpful article](https://www.wednesday.is/writing-tutorials/how-to-use-copilot-to-deploy-projects-on-ecs) that guides you through the process of setting up AWS Copilot locally as well as also helps you understand how you can publish and update an application using 4 simple steps.
+If you are new to AWS Copilot or you want to learn more about AWS Copilot, please refer to [this helpful article](https://www.wednesday.is/writing-tutorials/how-to-use-copilot-to-deploy-projects-on-ecs/?utm_source=github&utm_medium=python-fastapi) that guides you through the process of setting up AWS Copilot locally as well as also helps you understand how you can publish and update an application using 4 simple steps.
 
 
 #### Related Dashboard Links
